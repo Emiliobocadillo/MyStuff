@@ -9,3 +9,6 @@ export interface Item {
   color?: string;
   price?: number;
 }
+
+export type NewItem = Omit<Item, "_id">;
+export type UpdatedItem = Item; // Includes '_id'

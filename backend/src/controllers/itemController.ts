@@ -23,7 +23,7 @@ export const getItem = async (
   next: NextFunction
 ) => {
   try {
-    throw new Error("Deliberate error for testing"); // Force an error
+    // throw new Error("Deliberate error for testing"); // Force an error
 
     const { id } = req.params;
     const item = await ItemModel.findById(id);

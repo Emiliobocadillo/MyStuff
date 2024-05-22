@@ -3,6 +3,7 @@ import express from "express";
 import morgan from "morgan";
 import cors from "cors";
 import itemRoutes from "./routes/itemRoutes";
+import labelRoutes from "./routes/labelRoutes";
 import errorHandler from "./middleware/errorHandler";
 
 const app = express();
@@ -17,6 +18,9 @@ app.use(express.json());
 
 // Use item routes
 app.use("/api/items", itemRoutes);
+
+// Use label routes
+app.use("/api/labels", labelRoutes);
 
 app.use(errorHandler);
 

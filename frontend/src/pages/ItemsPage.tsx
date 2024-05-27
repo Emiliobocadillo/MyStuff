@@ -6,6 +6,16 @@ import ItemModal from "../components/ItemModal";
 import { Item } from "../types/item";
 import { useAuth } from "../context/AuthContext";
 import styles from "../styles/ItemsPage.module.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faTshirt,
+  // faLaptop,
+  faUtensils,
+  faCouch,
+  faDumbbell,
+  faBars,
+  faPlug
+} from "@fortawesome/free-solid-svg-icons";
 
 const ItemsPage: React.FC = () => {
   const { userEmail } = useAuth();
@@ -146,12 +156,12 @@ const ItemsPage: React.FC = () => {
           />
           <div className={styles.filterButtons}>
             {[
-              "Clothes",
-              "Electronics",
-              "Kitchen",
-              "Furniture",
-              "Sport/Wellness",
-            ].map((label) => (
+              { label: "Clothes", icon: faTshirt },
+              { label: "Electronics", icon: faPlug },
+              { label: "Kitchen", icon: faUtensils },
+              { label: "Furniture", icon: faCouch },
+              { label: "Sport/Wellness", icon: faDumbbell },
+            ].map(({ label, icon }) => (
               <button
                 key={label}
                 onClick={() => handleFilter(label)}
@@ -159,6 +169,11 @@ const ItemsPage: React.FC = () => {
                   filter === label ? styles.activeFilter : ""
                 }`}
               >
+                <FontAwesomeIcon
+                  icon={icon}
+                  className={filter === label ? "fa-spin" : ""}
+                  style={{ marginRight: "8px" }}
+                />
                 {label}
               </button>
             ))}
@@ -168,6 +183,11 @@ const ItemsPage: React.FC = () => {
                 filter === null ? styles.activeFilter : ""
               }`}
             >
+              <FontAwesomeIcon
+                icon={faBars}
+                className={filter === null ? "fa-spin" : ""}
+                style={{ marginRight: "8px" }}
+              />
               All
             </button>
           </div>

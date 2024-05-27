@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Select, { MultiValue, StylesConfig } from "react-select";
+import Select, { MultiValue, StylesConfig, GroupBase } from "react-select";
 import { createItem, updateItem } from "../services/itemsService";
 import { getLabels } from "../services/labelService";
 import { Item, NewItem, UpdatedItem } from "../types/item";
@@ -13,7 +13,16 @@ interface ItemFormProps {
 interface LabelOption {
   value: string;
   label: string;
+  isDefault: boolean; // New property to indicate if the label is default
 }
+
+const defaultLabels = [
+  "Clothes",
+  "Electronics",
+  "Kitchen",
+  "Furniture",
+  "Sport/Wellness",
+];
 
 const ItemForm: React.FC<ItemFormProps> = ({ onItemAdded, item }) => {
   const [name, setName] = useState(item?.name || "");
@@ -23,7 +32,7 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemAdded, item }) => {
     item?.labels || []
   );
   const [newLabel, setNewLabel] = useState("");
-  const [allLabels, setAllLabels] = useState<LabelOption[]>([]);
+  const [allLabels, setAllLabels] = useState<GroupBase<LabelOption>[]>([]);
   const [brand, setBrand] = useState(item?.brand || "");
   const [size, setSize] = useState(item?.size || "");
   const [color, setColor] = useState(item?.color || "");
@@ -35,7 +44,22 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemAdded, item }) => {
     const fetchLabels = async () => {
       try {
         const labels = await getLabels();
-        setAllLabels(labels.map((label) => ({ value: label, label })));
+        const labelOptions: LabelOption[] = labels.map((label) => ({
+          value: label,
+          label,
+          isDefault: defaultLabels.includes(label),
+        }));
+        const groupedLabels = [
+          {
+            label: "Default Categories",
+            options: labelOptions.filter((option) => option.isDefault),
+          },
+          {
+            label: "Custom Labels",
+            options: labelOptions.filter((option) => !option.isDefault),
+          },
+        ];
+        setAllLabels(groupedLabels);
       } catch (error) {
         console.error("Failed to fetch labels:", error);
       }
@@ -108,8 +132,21 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemAdded, item }) => {
 
   const handleAddNewLabel = () => {
     if (newLabel.trim() !== "") {
-      const newLabelOption: LabelOption = { value: newLabel, label: newLabel };
-      setAllLabels([...allLabels, newLabelOption]);
+      const newLabelOption: LabelOption = {
+        value: newLabel,
+        label: newLabel,
+        isDefault: false,
+      };
+      const updatedLabels = allLabels.map((group) => {
+        if (group.label === "Custom Labels") {
+          return {
+            ...group,
+            options: [...group.options, newLabelOption], // Create a new array with the new label
+          };
+        }
+        return group;
+      });
+      setAllLabels(updatedLabels);
       setSelectedLabels([...selectedLabels, newLabel]);
       setNewLabel("");
     }
@@ -173,9 +210,9 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemAdded, item }) => {
         <Select
           isMulti
           options={allLabels}
-          value={allLabels.filter((option) =>
-            selectedLabels.includes(option.value)
-          )}
+          value={allLabels
+            .flatMap((group) => group.options)
+            .filter((option) => selectedLabels.includes(option.value))}
           onChange={handleSelectChange}
           closeMenuOnSelect={false}
           styles={customSelectStyles}

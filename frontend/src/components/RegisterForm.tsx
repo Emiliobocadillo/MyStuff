@@ -16,15 +16,16 @@ const RegisterForm: React.FC = () => {
     setError(null);
 
     try {
+      const lowerCaseEmail = email.toLowerCase(); // Convert email to lowercase
       const response = await axios.post(
         "http://localhost:5000/api/auth/register",
         {
-          email,
+          email: lowerCaseEmail,
           password,
         }
       );
       const { token } = response.data;
-      login(email, token);
+      login(lowerCaseEmail, token); // Use the lowercase email for login
       navigate("/items"); // Redirect to items page after registration
     } catch (err) {
       setError("Failed to register. Please try again.");
@@ -40,7 +41,7 @@ const RegisterForm: React.FC = () => {
         <input
           type="email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => setEmail(e.target.value.toLowerCase())} // Ensure email is lowercase
           required
           className={styles.input}
         />

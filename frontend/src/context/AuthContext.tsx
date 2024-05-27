@@ -16,9 +16,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   );
 
   const login = (email: string, token: string) => {
-    localStorage.setItem("email", email);
+    const lowerCaseEmail = email.toLowerCase(); // Convert email to lowercase
+    localStorage.setItem("email", lowerCaseEmail);
     localStorage.setItem("token", token);
-    setUserEmail(email);
+    setUserEmail(lowerCaseEmail);
   };
 
   const logout = () => {

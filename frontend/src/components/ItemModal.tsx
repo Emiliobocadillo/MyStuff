@@ -11,6 +11,7 @@ interface ItemModalProps {
   onRequestClose: () => void;
   onItemAdded: (item: Item) => void;
   item?: Item | null; // Make item optional
+  onDelete: (itemId: string) => void; // Add onDelete prop
 }
 
 const ItemModal: React.FC<ItemModalProps> = ({
@@ -18,6 +19,7 @@ const ItemModal: React.FC<ItemModalProps> = ({
   onRequestClose,
   onItemAdded,
   item,
+  onDelete,
 }) => {
   return (
     <Modal
@@ -30,9 +32,19 @@ const ItemModal: React.FC<ItemModalProps> = ({
       <div>
         <h2 className={styles.header}>{item ? "Edit Item" : "Add New Item"}</h2>
         <ItemForm onItemAdded={onItemAdded} item={item} />
-        <button onClick={onRequestClose} className={styles.closeButton}>
-          Close
-        </button>
+        <div className={styles.buttonGroup}>
+          <button onClick={onRequestClose} className={styles.closeButton}>
+            Close
+          </button>
+          {item && (
+            <button
+              onClick={() => onDelete(item._id)}
+              className={styles.deleteButton}
+            >
+              Delete Item
+            </button>
+          )}
+        </div>
       </div>
     </Modal>
   );

@@ -80,6 +80,8 @@ const ItemsPage: React.FC = () => {
     try {
       await deleteItem(itemId);
       setItems(items.filter((item) => item._id !== itemId));
+      setFilteredItems(filteredItems.filter((item) => item._id !== itemId)); // Update filtered items
+      setIsModalOpen(false); // Close the modal on delete
     } catch (error) {
       setError("Failed to delete item.");
     }
@@ -125,77 +127,74 @@ const ItemsPage: React.FC = () => {
   }
 
   return (
-    <div className={styles.container}>
-      <h1>Items Page</h1>
-      <div className={styles.actionBar}>
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className={styles.addButton}
-        >
-          Add New Item
-        </button>
-        <input
-          type="text"
-          placeholder="Search..."
-          value={searchQuery}
-          onChange={handleSearchChange}
-          className={styles.searchInput}
-        />
-        <div className={styles.filterButtons}>
-          {[
-            "Clothes",
-            "Electronics",
-            "Kitchen",
-            "Furniture",
-            "Sport/Wellness",
-          ].map((label) => (
+    <div className={isModalOpen ? styles.blurred : ""}>
+      <div className={styles.container}>
+        <h1>Items Page</h1>
+        <div className={styles.actionBar}>
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className={styles.addButton}
+          >
+            Add New Item
+          </button>
+          <input
+            type="text"
+            placeholder="Search..."
+            value={searchQuery}
+            onChange={handleSearchChange}
+            className={styles.searchInput}
+          />
+          <div className={styles.filterButtons}>
+            {[
+              "Clothes",
+              "Electronics",
+              "Kitchen",
+              "Furniture",
+              "Sport/Wellness",
+            ].map((label) => (
+              <button
+                key={label}
+                onClick={() => handleFilter(label)}
+                className={`${styles.filterButton} ${
+                  filter === label ? styles.activeFilter : ""
+                }`}
+              >
+                {label}
+              </button>
+            ))}
             <button
-              key={label}
-              onClick={() => handleFilter(label)}
+              onClick={() => setFilter(null)}
               className={`${styles.filterButton} ${
-                filter === label ? styles.activeFilter : ""
+                filter === null ? styles.activeFilter : ""
               }`}
             >
-              {label}
+              All
             </button>
+          </div>
+        </div>
+        <div className={styles.table}>
+          <div className={`${styles.header} ${styles.row}`}>
+            <div className={styles.cell}>Name</div>
+            <div className={styles.cell}>Description</div>
+            <div className={styles.cell}>Quantity</div>
+            <div className={styles.cell}>Labels</div>
+            <div className={styles.cell}>Brand</div>
+            <div className={styles.cell}>Size</div>
+            <div className={styles.cell}>Color</div>
+            <div className={styles.cell}>Price</div>
+          </div>
+          {filteredItems.map((item) => (
+            <ItemRow key={item._id} item={item} onEdit={handleEdit} />
           ))}
-          <button
-            onClick={() => setFilter(null)}
-            className={`${styles.filterButton} ${
-              filter === null ? styles.activeFilter : ""
-            }`}
-          >
-            All
-          </button>
         </div>
+        <ItemModal
+          isOpen={isModalOpen}
+          onRequestClose={handleModalClose}
+          onItemAdded={handleItemAdded}
+          item={currentItem} // Pass the current item to the modal for editing
+          onDelete={handleDelete} // Pass the delete function to the modal
+        />
       </div>
-      <div className={styles.table}>
-        <div className={`${styles.header} ${styles.row}`}>
-          <div className={styles.cell}>Name</div>
-          <div className={styles.cell}>Description</div>
-          <div className={styles.cell}>Quantity</div>
-          <div className={styles.cell}>Labels</div>
-          <div className={styles.cell}>Brand</div>
-          <div className={styles.cell}>Size</div>
-          <div className={styles.cell}>Color</div>
-          <div className={styles.cell}>Price</div>
-          <div className={styles.cell}>Actions</div>
-        </div>
-        {filteredItems.map((item) => (
-          <ItemRow
-            key={item._id}
-            item={item}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-          />
-        ))}
-      </div>
-      <ItemModal
-        isOpen={isModalOpen}
-        onRequestClose={handleModalClose}
-        onItemAdded={handleItemAdded}
-        item={currentItem} // Pass the current item to the modal for editing
-      />
     </div>
   );
 };

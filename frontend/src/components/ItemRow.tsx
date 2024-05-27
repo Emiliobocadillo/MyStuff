@@ -5,12 +5,11 @@ import styles from "../styles/ItemRow.module.css"; // Import the CSS module
 interface ItemRowProps {
   item: Item;
   onEdit: (item: Item) => void;
-  onDelete: (itemId: string) => void;
 }
 
-const ItemRow: React.FC<ItemRowProps> = ({ item, onEdit, onDelete }) => {
+const ItemRow: React.FC<ItemRowProps> = ({ item, onEdit }) => {
   return (
-    <div className={styles.row}>
+    <div className={styles.row} onClick={() => onEdit(item)}>
       <div className={styles.cell}>{item.name}</div>
       <div className={styles.cell}>{item.description}</div>
       <div className={styles.cell}>{item.quantity}</div>
@@ -20,19 +19,6 @@ const ItemRow: React.FC<ItemRowProps> = ({ item, onEdit, onDelete }) => {
       <div className={styles.cell}>{item.color}</div>
       <div className={styles.cell}>
         {item.price ? `$${item.price.toFixed(2)}` : ""}
-      </div>
-      <div className={styles.cell}>
-        <div className={styles.buttonContainer}>
-          <button onClick={() => onEdit(item)} className={styles.editButton}>
-            Edit
-          </button>
-          <button
-            onClick={() => onDelete(item._id)}
-            className={styles.deleteButton}
-          >
-            Delete
-          </button>
-        </div>
       </div>
     </div>
   );

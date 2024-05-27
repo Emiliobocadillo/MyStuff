@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import ItemModel from "../models/itemModel";
+import createHttpError from "http-errors";
 
 // Get all labels
 export const getLabels = async (
@@ -14,7 +15,8 @@ export const getLabels = async (
       item.labels.forEach((label) => labels.add(label));
     });
     res.json(Array.from(labels));
-  } catch (error) {
-    next(error); // Forward error to the error-handling middleware
+  } catch (err) {
+    const error = err as Error; // Cast err to Error type
+    next(createHttpError(500, error.message)); // Forward error to the error-handling middleware
   }
 };

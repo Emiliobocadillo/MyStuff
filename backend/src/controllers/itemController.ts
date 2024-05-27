@@ -1,101 +1,143 @@
 import { Request, Response, NextFunction } from "express";
 import { validationResult } from "express-validator";
 import ItemModel from "../models/itemModel";
+import createHttpError from "http-errors";
 
-// Get all items
+interface AuthenticatedRequest extends Request {
+  user?: {
+    id: string;
+  };
+}
+
+// Get all items for the authenticated user
 export const getItems = async (
-  req: Request,
+  req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const items = await ItemModel.find();
+    const items = await ItemModel.find({ user: req.user?.id });
     res.json(items);
-  } catch (error) {
-    next(error); // Forward error to the error-handling middleware
+  } catch (err) {
+    const error = err as Error;
+    next(createHttpError(500, error.message));
   }
 };
 
-// Get a single item by ID
+// Get a single item by ID for the authenticated user
 export const getItem = async (
-  req: Request,
+  req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    // throw new Error("Deliberate error for testing"); // Force an error
-
     const { id } = req.params;
-    const item = await ItemModel.findById(id);
+    const item = await ItemModel.findOne({ _id: id, user: req.user?.id });
     if (!item) {
-      return res.status(404).json({ message: "Item not found" });
+      return next(createHttpError(404, "Item not found"));
     }
     res.json(item);
-  } catch (error) {
-    next(error); // Forward error to the error-handling middleware
+  } catch (err) {
+    const error = err as Error;
+    next(createHttpError(500, error.message));
   }
 };
 
-// Create a new item
 export const createItem = async (
-  req: Request,
+  req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
 ) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+    return next(
+      createHttpError(400, "Validation failed", { details: errors.array() })
+    );
   }
 
-  const newItem = new ItemModel(req.body);
+  if (!req.body.labels || req.body.labels.length === 0) {
+    return next(createHttpError(400, "At least one label is required."));
+  }
+
+  const newItem = new ItemModel({ ...req.body, user: req.user?.id });
+
   try {
     const savedItem = await newItem.save();
     res.status(201).json(savedItem);
-  } catch (error) {
-    next(error); // Forward error to the error-handling middleware
+  } catch (err) {
+    const error = err as Error;
+    next(createHttpError(500, error.message));
   }
 };
 
-// Update an item by ID
+
+// Update an item by ID for the authenticated user
 export const updateItem = async (
-  req: Request,
+  req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
 ) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+    return next(
+      createHttpError(400, "Validation failed", { details: errors.array() })
+    );
   }
 
   try {
     const { id } = req.params;
-    const updatedItem = await ItemModel.findByIdAndUpdate(id, req.body, {
-      new: true,
-      runValidators: true,
-    });
+    const updatedItem = await ItemModel.findOneAndUpdate(
+      { _id: id, user: req.user?.id },
+      req.body,
+      { new: true, runValidators: true }
+    );
     if (!updatedItem) {
-      return res.status(404).json({ message: "Item not found" });
+      return next(createHttpError(404, "Item not found"));
     }
     res.json(updatedItem);
-  } catch (error) {
-    next(error); // Forward error to the error-handling middleware
+  } catch (err) {
+    const error = err as Error;
+    next(createHttpError(500, error.message));
   }
 };
 
-// Delete an item by ID
+// Delete an item by ID for the authenticated user
 export const deleteItem = async (
-  req: Request,
+  req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
 ) => {
   try {
     const { id } = req.params;
-    const deletedItem = await ItemModel.findByIdAndDelete(id);
+    const deletedItem = await ItemModel.findOneAndDelete({
+      _id: id,
+      user: req.user?.id,
+    });
     if (!deletedItem) {
-      return res.status(404).json({ message: "Item not found" });
+      return next(createHttpError(404, "Item not found"));
     }
     res.json({ message: "Item deleted successfully" });
-  } catch (error) {
-    next(error); // Forward error to the error-handling middleware
+  } catch (err) {
+    const error = err as Error;
+    next(createHttpError(500, error.message));
   }
 };
+
+// Create multiple items
+export const createMultipleItems = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const items = req.body.items;
+    if (!Array.isArray(items) || items.length === 0) {
+      throw createHttpError(400, "Invalid items data");
+    }
+    const savedItems = await ItemModel.insertMany(items);
+    res.status(201).json(savedItems);
+  } catch (error) {
+    next(error);
+  }
+};
+

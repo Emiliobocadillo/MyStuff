@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import Select, { MultiValue } from "react-select";
+import Select, { MultiValue, StylesConfig } from "react-select";
 import { createItem, updateItem } from "../services/itemsService";
 import { getLabels } from "../services/labelService";
 import { Item, NewItem, UpdatedItem } from "../types/item";
+import styles from "../styles/ItemForm.module.css"; // Import the CSS module
 
 interface ItemFormProps {
   onItemAdded: (item: Item) => void;
@@ -27,6 +28,8 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemAdded, item }) => {
   const [size, setSize] = useState(item?.size || "");
   const [color, setColor] = useState(item?.color || "");
   const [price, setPrice] = useState<number | undefined>(item?.price);
+  const [error, setError] = useState<string | null>(null);
+  const [emptyFields, setEmptyFields] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchLabels = async () => {
@@ -45,6 +48,20 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemAdded, item }) => {
     const combinedLabels = [...selectedLabels, ...newLabel.split(",")].filter(
       (label) => label !== ""
     );
+
+    // Validation
+    const emptyFields = [];
+    if (!name) emptyFields.push("name");
+    if (!quantity) emptyFields.push("quantity");
+    if (combinedLabels.length === 0) emptyFields.push("labels");
+
+    if (emptyFields.length > 0) {
+      setError(
+        `Please fill in the following fields: ${emptyFields.join(", ")}`
+      );
+      setEmptyFields(emptyFields);
+      return;
+    }
 
     const newItem: NewItem = {
       name,
@@ -78,6 +95,8 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemAdded, item }) => {
       setSize("");
       setColor("");
       setPrice(undefined);
+      setError(null);
+      setEmptyFields([]);
     } catch (error) {
       console.error("Failed to save item:", error);
     }
@@ -96,39 +115,61 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemAdded, item }) => {
     }
   };
 
+  // Custom styles for react-select
+  const customSelectStyles: StylesConfig<LabelOption, true> = {
+    control: (provided) => ({
+      ...provided,
+      borderColor: emptyFields.includes("labels")
+        ? "red"
+        : provided.borderColor,
+      "&:hover": {
+        borderColor: emptyFields.includes("labels")
+          ? "red"
+          : provided.borderColor,
+      },
+    }),
+  };
+
   return (
-    <form onSubmit={handleSubmit} style={styles.form}>
-      <div style={styles.formGroup}>
-        <label style={styles.label}>Name:</label>
+    <form onSubmit={handleSubmit} className={styles.form}>
+      <div
+        className={`${styles.formGroup} ${
+          emptyFields.includes("name") ? styles.error : ""
+        }`}
+      >
+        <label className={styles.label}>Name:</label>
         <input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          required
-          style={styles.input}
+          className={`${styles.input} ${
+            emptyFields.includes("name") ? styles.errorInput : ""
+          }`}
         />
       </div>
-      <div style={styles.formGroup}>
-        <label style={styles.label}>Description:</label>
-        <input
-          type="text"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          style={styles.input}
-        />
-      </div>
-      <div style={styles.formGroup}>
-        <label style={styles.label}>Quantity:</label>
+
+      <div
+        className={`${styles.formGroup} ${
+          emptyFields.includes("quantity") ? styles.error : ""
+        }`}
+      >
+        <label className={styles.label}>Quantity:</label>
         <input
           type="number"
           value={quantity}
           onChange={(e) => setQuantity(Number(e.target.value))}
           required
-          style={styles.input}
+          className={`${styles.input} ${
+            emptyFields.includes("quantity") ? styles.errorInput : ""
+          }`}
         />
       </div>
-      <div style={styles.formGroup}>
-        <label style={styles.label}>Labels:</label>
+      <div
+        className={`${styles.formGroup} ${
+          emptyFields.includes("labels") ? styles.error : ""
+        }`}
+      >
+        <label className={styles.label}>Labels:</label>
         <Select
           isMulti
           options={allLabels}
@@ -137,106 +178,79 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemAdded, item }) => {
           )}
           onChange={handleSelectChange}
           closeMenuOnSelect={false}
+          styles={customSelectStyles}
         />
-        <div style={styles.newLabelContainer}>
+        <div className={styles.newLabelContainer}>
           <input
             type="text"
             value={newLabel}
             onChange={(e) => setNewLabel(e.target.value)}
             placeholder="Add new label"
-            style={styles.input}
+            className={`${styles.input} ${
+              emptyFields.includes("newLabel") ? styles.errorInput : ""
+            }`}
           />
           <button
             type="button"
             onClick={handleAddNewLabel}
-            style={styles.addButton}
+            className={styles.addButton}
           >
             Add
           </button>
         </div>
       </div>
-      <div style={styles.formGroup}>
-        <label style={styles.label}>Brand:</label>
+      <div className={styles.formGroup}>
+        <label className={styles.label}>Description:</label>
+        <textarea
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          className={`${styles.textarea} ${
+            emptyFields.includes("description") ? styles.errorInput : ""
+          }`}
+        />
+      </div>
+      <div className={styles.formGroup}>
+        <label className={styles.label}>Brand:</label>
         <input
           type="text"
           value={brand}
           onChange={(e) => setBrand(e.target.value)}
-          style={styles.input}
+          className={styles.input}
         />
       </div>
-      <div style={styles.formGroup}>
-        <label style={styles.label}>Size:</label>
+      <div className={styles.formGroup}>
+        <label className={styles.label}>Size:</label>
         <input
           type="text"
           value={size}
           onChange={(e) => setSize(e.target.value)}
-          style={styles.input}
+          className={styles.input}
         />
       </div>
-      <div style={styles.formGroup}>
-        <label style={styles.label}>Color:</label>
+      <div className={styles.formGroup}>
+        <label className={styles.label}>Color:</label>
         <input
           type="text"
           value={color}
           onChange={(e) => setColor(e.target.value)}
-          style={styles.input}
+          className={styles.input}
         />
       </div>
-      <div style={styles.formGroup}>
-        <label style={styles.label}>Price:</label>
+      <div className={styles.formGroup}>
+        <label className={styles.label}>Price:</label>
         <input
           type="number"
           value={price}
           onChange={(e) => setPrice(Number(e.target.value))}
-          style={styles.input}
+          className={styles.input}
         />
       </div>
-      <button type="submit" style={styles.addButton}>
+      <button type="submit" className={styles.addButton}>
         {item ? "Update Item" : "Add Item"}
       </button>
+      {error && <p className={styles.errorText}>{error}</p>}
     </form>
   );
-};
-
-const styles: { [key: string]: React.CSSProperties } = {
-  form: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "15px",
-    padding: "20px",
-    borderRadius: "8px",
-    backgroundColor: "#f9f9f9",
-  },
-  newLabelContainer: {
-    display: "flex",
-    alignItems: "center",
-    gap: "10px",
-  },
-  addButton: {
-    padding: "5px 10px",
-    backgroundColor: "#007BFF",
-    color: "#FFF",
-    border: "none",
-    borderRadius: "4px",
-    cursor: "pointer",
-  },
-  input: {
-    padding: "10px",
-    borderRadius: "4px",
-    border: "1px solid #ccc",
-    width: "100%",
-  },
-  formGroup: {
-    display: "flex",
-    flexDirection: "column",
-  },
-  label: {
-    fontWeight: "bold",
-    marginBottom: "5px",
-  },
-  formControl: {
-    marginBottom: "15px",
-  },
 };
 
 export default ItemForm;

@@ -5,6 +5,7 @@ import cors from "cors";
 import itemRoutes from "./routes/itemRoutes";
 import labelRoutes from "./routes/labelRoutes";
 import errorHandler from "./middleware/errorHandler";
+import authRoutes from "./routes/authRoutes";
 
 const app = express();
 
@@ -21,6 +22,9 @@ app.use("/api/items", itemRoutes);
 
 // Use label routes
 app.use("/api/labels", labelRoutes);
+
+// Use authentication routes
+app.use("/api/auth", authRoutes);
 
 app.use(errorHandler);
 

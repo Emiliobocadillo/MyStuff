@@ -1,0 +1,91 @@
+/* ItemsPage.module.css */
+.container {
+  padding: 20px;
+}
+
+.actionBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.addButton {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.addButton:hover {
+  background-color: #45a049;
+}
+
+.searchInput {
+  margin-left: 20px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.filterButtons {
+  display: flex;
+  gap: 10px;
+}
+
+.filterButton {
+  background-color: #008CBA;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.filterButton:hover {
+  background-color: #007bb5;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.filterButton:active {
+  background-color: #006494;
+}
+
+.activeFilter {
+  background-color: #005f8d;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  background-color: #f9f9f9;
+  padding: 10px 0;
+  border-bottom: 1px solid #ccc;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.cell {
+  flex: 1;
+  padding: 0 10px;
+  text-align: left;
+}
+
+.header .cell {
+  font-weight: bold;
+}

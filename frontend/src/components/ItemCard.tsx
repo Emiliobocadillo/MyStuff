@@ -1,5 +1,6 @@
 import React from "react";
 import { Item } from "../types/item";
+import styles from "../styles/ItemCard.module.css"; // Import the CSS module
 
 interface ItemCardProps {
   item: Item;
@@ -7,9 +8,11 @@ interface ItemCardProps {
 
 const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
   return (
-    <div style={styles.card}>
-      <h2 style={styles.title}>{item.name}</h2>
-      {item.description && <p style={styles.description}>{item.description}</p>}
+    <div className={styles.card}>
+      <h2 className={styles.title}>{item.name}</h2>
+      {item.description && (
+        <p className={styles.description}>{item.description}</p>
+      )}
       <p>
         <strong>Quantity:</strong> {item.quantity}
       </p>
@@ -40,22 +43,6 @@ const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
       )}
     </div>
   );
-};
-
-const styles = {
-  card: {
-    border: "1px solid #ccc",
-    borderRadius: "8px",
-    padding: "16px",
-    margin: "8px",
-    boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-  },
-  title: {
-    margin: "0 0 8px",
-  },
-  description: {
-    margin: "0 0 16px",
-  },
 };
 
 export default ItemCard;

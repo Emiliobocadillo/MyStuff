@@ -1,4 +1,6 @@
 import { Request, Response, NextFunction } from "express";
+import env from "../util/validateEnv";
+import { HttpError } from "http-errors";
 
 // Centralized error-handling middleware
 const errorHandler = (
@@ -7,15 +9,16 @@ const errorHandler = (
   res: Response,
   next: NextFunction
 ) => {
-  // Log the error stack to the console for debugging
-  console.error(err.stack);
+  console.error(err.stack); // Log the error stack to the console for debugging
 
-  // Send a JSON response to the client
-  res.status(500).json({
+  let statusCode = 500;
+  if (err instanceof HttpError) {
+    statusCode = err.statusCode || 500;
+  }
+
+  res.status(statusCode).json({
     message: err.message,
-    // In production, avoid exposing stack traces to the user
-    stack:
-      process.env.NODE_ENV === "production" ? "Stack trace hidden" : err.stack,
+    stack: env.NODE_ENV === "production" ? "Stack trace hidden" : err.stack,
   });
 };
 

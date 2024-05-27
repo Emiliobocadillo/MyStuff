@@ -1,0 +1,42 @@
+.row {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #ccc;
+  padding: 10px 0;
+}
+
+.cell {
+  flex: 1;
+  padding: 0 10px;
+  text-align: left;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  /* mask-image: linear-gradient(180deg, #000 60%, transparent); */
+}
+
+.buttonContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.editButton {
+  margin-bottom: 10px;
+  padding: 5px 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.deleteButton {
+  padding: 5px 10px;
+  background-color: #ff4136;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}

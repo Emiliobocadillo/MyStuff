@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import styles from "../styles/Navbar.module.css"; // Import the CSS module
 
 const Navbar = () => {
   const { userEmail, logout } = useAuth();
@@ -11,30 +12,30 @@ const Navbar = () => {
   };
 
   return (
-    <nav style={styles.navbar}>
-      <Link to="/" style={styles.logo}>
+    <nav className={styles.navbar}>
+      <Link to="/" className={styles.logo}>
         MyStuff
       </Link>
-      <div style={styles.links}>
-        <Link to="/" style={styles.link}>
+      <div className={styles.links}>
+        <Link to="/" className={styles.link}>
           Home
         </Link>
-        <Link to="/items" style={styles.link}>
+        <Link to="/items" className={styles.link}>
           Items
         </Link>
         {userEmail ? (
           <>
-            <span style={styles.userEmail}>{userEmail}</span>
-            <button onClick={handleLogout} style={styles.button}>
+            <span className={styles.userEmail}>{userEmail}</span>
+            <button onClick={handleLogout} className={styles.button}>
               Logout
             </button>
           </>
         ) : (
           <>
-            <Link to="/login" style={styles.link}>
+            <Link to="/login" className={styles.link}>
               Login
             </Link>
-            <Link to="/register" style={styles.link}>
+            <Link to="/register" className={styles.link}>
               Sign Up
             </Link>
           </>
@@ -42,47 +43,6 @@ const Navbar = () => {
       </div>
     </nav>
   );
-};
-
-const styles = {
-  navbar: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: "10px 20px",
-    backgroundColor: "#282c34",
-  },
-  logo: {
-    color: "white",
-    textDecoration: "none",
-    fontSize: "24px",
-    fontWeight: "bold",
-  },
-  links: {
-    display: "flex",
-    alignItems: "center",
-  },
-  link: {
-    color: "white",
-    textDecoration: "none",
-    marginLeft: "20px",
-    fontSize: "18px",
-  },
-  userEmail: {
-    color: "white",
-    marginLeft: "20px",
-    fontSize: "18px",
-  },
-  button: {
-    marginLeft: "20px",
-    padding: "5px 10px",
-    fontSize: "16px",
-    cursor: "pointer",
-    borderRadius: "4px",
-    border: "none",
-    backgroundColor: "#007BFF",
-    color: "white",
-  },
 };
 
 export default Navbar;

@@ -285,7 +285,7 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemAdded, item }) => {
       <button type="submit" className={styles.addButton}>
         {item ? "Update Item" : "Add Item"}
       </button>
-      {error && <p className={styles.errorText}>{error}</p>}
+      {error && <div className={styles.errorMessage}>{error}</div>}
     </form>
   );
 };

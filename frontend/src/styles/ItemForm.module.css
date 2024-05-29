@@ -59,3 +59,18 @@
 .errorInput {
   border: 1px solid red;
 }
+
+
+/* :root {
+  --primary: #1aac83;
+  --error: #e7195a;
+} */
+
+div.errorMessage {
+  padding: 10px;
+  background: #ffefef;
+  border: 1px solid red;
+  color: red;
+  border-radius: 4px;
+  /* margin: 20px 0; */
+}

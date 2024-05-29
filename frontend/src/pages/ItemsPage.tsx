@@ -14,7 +14,7 @@ import {
   faCouch,
   faDumbbell,
   faBars,
-  faPlug
+  faPlug,
 } from "@fortawesome/free-solid-svg-icons";
 
 const ItemsPage: React.FC = () => {
@@ -113,6 +113,7 @@ const ItemsPage: React.FC = () => {
       }
     });
     setIsModalOpen(false);
+    setCurrentItem(null);
   };
 
   const handleModalClose = () => {

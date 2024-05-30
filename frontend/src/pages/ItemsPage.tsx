@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { getItems, deleteItem } from "../services/itemsService";
 import ItemRow from "../components/ItemRow";
 import ItemModal from "../components/ItemModal";
@@ -9,7 +8,6 @@ import styles from "../styles/ItemsPage.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faTshirt,
-  // faLaptop,
   faUtensils,
   faCouch,
   faDumbbell,
@@ -18,7 +16,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 const ItemsPage: React.FC = () => {
-  const { userEmail } = useAuth();
+  const { state } = useAuth();
+  const { userEmail } = state;
   const [items, setItems] = useState<Item[]>([]);
   const [filteredItems, setFilteredItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
@@ -27,14 +26,8 @@ const ItemsPage: React.FC = () => {
   const [currentItem, setCurrentItem] = useState<Item | null>(null);
   const [filter, setFilter] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const navigate = useNavigate();
 
   useEffect(() => {
-    if (!userEmail) {
-      navigate("/login");
-      return;
-    }
-
     const fetchItems = async () => {
       try {
         const items = await getItems();
@@ -48,7 +41,7 @@ const ItemsPage: React.FC = () => {
     };
 
     fetchItems();
-  }, [userEmail, navigate]);
+  }, [userEmail]);
 
   useEffect(() => {
     let filtered = items;

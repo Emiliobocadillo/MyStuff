@@ -1,4 +1,6 @@
+import React from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
+import { useAuth } from "./context/AuthContext";
 import HomePage from "./pages/HomePage";
 import ItemsPage from "./pages/ItemsPage";
 import Navbar from "./components/Navbar";
@@ -6,7 +8,7 @@ import LoginForm from "./components/LoginForm";
 import RegisterForm from "./components/RegisterForm";
 
 const App = () => {
-  const isAuthenticated = !!localStorage.getItem("token");
+  const { state } = useAuth();
 
   return (
     <>
@@ -15,7 +17,7 @@ const App = () => {
         <Route path="/" element={<HomePage />} />
         <Route
           path="/items"
-          element={isAuthenticated ? <ItemsPage /> : <Navigate to="/login" />}
+          element={state.userEmail ? <ItemsPage /> : <Navigate to="/login" />}
         />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/register" element={<RegisterForm />} />

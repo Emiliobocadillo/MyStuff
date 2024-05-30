@@ -1,9 +1,14 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useReducer, useContext, ReactNode } from "react";
+import {
+  authReducer,
+  initialState,
+  AuthState,
+  AuthAction,
+} from "./authReducer";
 
 interface AuthContextType {
-  userEmail: string | null;
-  login: (email: string, token: string) => void;
-  logout: () => void;
+  state: AuthState;
+  dispatch: React.Dispatch<AuthAction>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -11,25 +16,10 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [userEmail, setUserEmail] = useState<string | null>(
-    localStorage.getItem("email")
-  );
-
-  const login = (email: string, token: string) => {
-    const lowerCaseEmail = email.toLowerCase(); // Convert email to lowercase
-    localStorage.setItem("email", lowerCaseEmail);
-    localStorage.setItem("token", token);
-    setUserEmail(lowerCaseEmail);
-  };
-
-  const logout = () => {
-    localStorage.removeItem("email");
-    localStorage.removeItem("token");
-    setUserEmail(null);
-  };
+  const [state, dispatch] = useReducer(authReducer, initialState);
 
   return (
-    <AuthContext.Provider value={{ userEmail, login, logout }}>
+    <AuthContext.Provider value={{ state, dispatch }}>
       {children}
     </AuthContext.Provider>
   );

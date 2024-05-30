@@ -9,7 +9,7 @@ const RegisterForm: React.FC = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { dispatch } = useAuth();
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,7 +25,7 @@ const RegisterForm: React.FC = () => {
         }
       );
       const { token } = response.data;
-      login(lowerCaseEmail, token); // Use the lowercase email for login
+      dispatch({ type: "LOGIN", payload: { email: lowerCaseEmail, token } }); // Dispatch LOGIN action
       navigate("/items"); // Redirect to items page after registration
     } catch (err) {
       setError("Failed to register. Please try again.");

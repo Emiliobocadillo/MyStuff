@@ -6,7 +6,8 @@
     "start": "ts-node src/server.ts",
     "build": "tsc",
     "serve": "node dist/server.js",
-    "dev": "nodemon src/server.ts"
+    "dev": "nodemon src/server.ts",
+    "print-structure": "node ../scripts/printFolderStructure.js ./"
   },
   "keywords": [],
   "author": "",

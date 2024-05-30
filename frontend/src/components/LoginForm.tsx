@@ -2,21 +2,21 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import styles from "../styles/AuthForm.module.css"; // Import the CSS module
+import styles from "../styles/AuthForm.module.css";
 
 const LoginForm: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { dispatch } = useAuth();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
 
     try {
-      const lowerCaseEmail = email.toLowerCase(); // Convert email to lowercase
+      const lowerCaseEmail = email.toLowerCase();
       const response = await axios.post(
         "http://localhost:5000/api/auth/login",
         {
@@ -25,12 +25,13 @@ const LoginForm: React.FC = () => {
         }
       );
       const { token } = response.data;
-      login(lowerCaseEmail, token); // Use the lowercase email for login
-      navigate("/items"); // Redirect to items page after login
+      dispatch({ type: "LOGIN", payload: { email: lowerCaseEmail, token } });
+      navigate("/items");
     } catch (err) {
       setError("Invalid email or password");
     }
   };
+
 
   return (
     <form onSubmit={handleLogin} className={styles.form}>
@@ -41,7 +42,7 @@ const LoginForm: React.FC = () => {
         <input
           type="email"
           value={email}
-          onChange={(e) => setEmail(e.target.value.toLowerCase())} // Ensure email is lowercase
+          onChange={(e) => setEmail(e.target.value.toLowerCase())}
           required
           className={styles.input}
         />

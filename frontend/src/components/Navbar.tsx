@@ -3,11 +3,12 @@ import { useAuth } from "../context/AuthContext";
 import styles from "../styles/Navbar.module.css"; // Import the CSS module
 
 const Navbar = () => {
-  const { userEmail, logout } = useAuth();
+  const { state, dispatch } = useAuth();
+  const { userEmail } = state;
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    logout();
+    dispatch({ type: "LOGOUT" });
     navigate("/login");
   };
 
@@ -36,7 +37,7 @@ const Navbar = () => {
               Login
             </Link>
             <Link to="/register" className={styles.link}>
-              Sign Up
+              Register
             </Link>
           </>
         )}

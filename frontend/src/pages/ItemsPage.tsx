@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { getItems, deleteItem } from "../services/itemsService";
+import {
+  getItems,
+  createItem,
+  deleteItem,
+  updateItem,
+} from "../services/itemsService";
 import ItemRow from "../components/ItemRow";
 import ItemModal from "../components/ItemModal";
-import { Item } from "../types/item";
-import { useAuth } from "../hooks/useAuth"; // Update import path
+import { Item, NewItem } from "../types/item";
+import { useItems } from "../hooks/useItems";
 import styles from "../styles/ItemsPage.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -16,12 +21,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 const ItemsPage: React.FC = () => {
-  const { state } = useAuth();
-  const { userEmail } = state;
-  const [items, setItems] = useState<Item[]>([]);
+  const { state, dispatch } = useItems();
+  const { items, loading, error } = state;
   const [filteredItems, setFilteredItems] = useState<Item[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentItem, setCurrentItem] = useState<Item | null>(null);
   const [filter, setFilter] = useState<string | null>(null);
@@ -29,19 +31,20 @@ const ItemsPage: React.FC = () => {
 
   useEffect(() => {
     const fetchItems = async () => {
+      dispatch({ type: "FETCH_ITEMS_REQUEST" });
       try {
         const items = await getItems();
-        setItems(items);
-        setFilteredItems(items); // Initialize filtered items
+        dispatch({ type: "FETCH_ITEMS_SUCCESS", payload: items });
       } catch (error) {
-        setError("Failed to fetch items.");
-      } finally {
-        setLoading(false);
+        dispatch({
+          type: "FETCH_ITEMS_FAILURE",
+          payload: "Failed to fetch items.",
+        });
       }
     };
 
     fetchItems();
-  }, [userEmail]);
+  }, [dispatch]);
 
   useEffect(() => {
     let filtered = items;
@@ -72,7 +75,7 @@ const ItemsPage: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  const handleDelete = async (itemId: string) => {
+  const handleDeleteItem = async (itemId: string) => {
     const confirmed = window.confirm(
       "Are you sure you want to delete this item?"
     );
@@ -82,31 +85,40 @@ const ItemsPage: React.FC = () => {
 
     try {
       await deleteItem(itemId);
-      setItems(items.filter((item) => item._id !== itemId));
-      setFilteredItems(filteredItems.filter((item) => item._id !== itemId)); // Update filtered items
+      dispatch({ type: "DELETE_ITEM", payload: itemId });
       setIsModalOpen(false); // Close the modal on delete
+      setCurrentItem(null);
     } catch (error) {
-      setError("Failed to delete item.");
+      dispatch({
+        type: "FETCH_ITEMS_FAILURE",
+        payload: "Failed to delete item.",
+      });
     }
   };
 
-  const handleItemAdded = (updatedItem: Item) => {
-    setItems((prevItems) => {
-      const itemIndex = prevItems.findIndex(
-        (item) => item._id === updatedItem._id
-      );
-      if (itemIndex !== -1) {
-        // Update existing item
-        const newItems = [...prevItems];
-        newItems[itemIndex] = updatedItem;
-        return newItems;
-      } else {
-        // Add new item
-        return [...prevItems, updatedItem];
-      }
-    });
-    setIsModalOpen(false);
-    setCurrentItem(null);
+  const handleAddItem = async (newItem: NewItem) => {
+    try {
+      const createdItem = await createItem(newItem);
+      dispatch({ type: "ADD_ITEM", payload: createdItem });
+      setIsModalOpen(false);
+      setCurrentItem(null);
+    } catch (error) {
+      dispatch({ type: "FETCH_ITEMS_FAILURE", payload: "Failed to add item." });
+    }
+  };
+
+  const handleUpdateItem = async (updatedItem: Item) => {
+    try {
+      const result = await updateItem(updatedItem._id, updatedItem);
+      dispatch({ type: "UPDATE_ITEM", payload: result });
+      setIsModalOpen(false);
+      setCurrentItem(null);
+    } catch (error) {
+      dispatch({
+        type: "FETCH_ITEMS_FAILURE",
+        payload: "Failed to update item.",
+      });
+    }
   };
 
   const handleModalClose = () => {
@@ -204,9 +216,10 @@ const ItemsPage: React.FC = () => {
         <ItemModal
           isOpen={isModalOpen}
           onRequestClose={handleModalClose}
-          onItemAdded={handleItemAdded}
+          onItemAdded={handleAddItem}
+          onItemUpdated={handleUpdateItem}
+          onDelete={handleDeleteItem} // Pass the delete function to the modal
           item={currentItem} // Pass the current item to the modal for editing
-          onDelete={handleDelete} // Pass the delete function to the modal
         />
       </div>
     </div>

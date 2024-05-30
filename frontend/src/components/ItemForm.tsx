@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from "react";
 import Select, { MultiValue, StylesConfig, GroupBase } from "react-select";
-import { createItem, updateItem } from "../services/itemsService";
 import { getLabels } from "../services/labelService";
 import { Item, NewItem, UpdatedItem } from "../types/item";
 import styles from "../styles/ItemForm.module.css"; // Import the CSS module
 
 interface ItemFormProps {
-  onItemAdded: (item: Item) => void;
+  onSave: (item: NewItem | UpdatedItem) => void;
   item?: Item | null; // Make item optional
 }
 
 interface LabelOption {
   value: string;
   label: string;
-  isDefault: boolean; // New property to indicate if the label is default
+  isDefault: boolean;
 }
 
 const defaultLabels = [
@@ -24,7 +23,7 @@ const defaultLabels = [
   "Sport/Wellness",
 ];
 
-const ItemForm: React.FC<ItemFormProps> = ({ onItemAdded, item }) => {
+const ItemForm: React.FC<ItemFormProps> = ({ onSave, item }) => {
   const [name, setName] = useState(item?.name || "");
   const [description, setDescription] = useState(item?.description || "");
   const [quantity, setQuantity] = useState<number>(item?.quantity || 0);
@@ -67,7 +66,7 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemAdded, item }) => {
     fetchLabels();
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const combinedLabels = [...selectedLabels, ...newLabel.split(",")].filter(
       (label) => label !== ""
@@ -87,42 +86,33 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemAdded, item }) => {
       return;
     }
 
-    const newItem: NewItem = {
-      name,
-      description,
-      quantity,
-      labels: combinedLabels,
-      brand,
-      size,
-      color,
-      price,
-    };
-
-    try {
-      if (item) {
-        // Update existing item
-        const updatedItem: UpdatedItem = { ...newItem, _id: item._id };
-        const result = await updateItem(item._id, updatedItem);
-        onItemAdded(result);
-      } else {
-        // Create new item
-        const createdItem = await createItem(newItem);
-        onItemAdded(createdItem);
-      }
-      // Reset form fields
-      setName("");
-      setDescription("");
-      setQuantity(0);
-      setSelectedLabels([]);
-      setNewLabel("");
-      setBrand("");
-      setSize("");
-      setColor("");
-      setPrice(undefined);
-      setError(null);
-      setEmptyFields([]);
-    } catch (error) {
-      console.error("Failed to save item:", error);
+    if (item) {
+      // If item exists, it's an update
+      const updatedItem: UpdatedItem = {
+        _id: item._id,
+        name,
+        description,
+        quantity,
+        labels: combinedLabels,
+        brand,
+        size,
+        color,
+        price,
+      };
+      onSave(updatedItem);
+    } else {
+      // If item doesn't exist, it's a new item
+      const newItem: NewItem = {
+        name,
+        description,
+        quantity,
+        labels: combinedLabels,
+        brand,
+        size,
+        color,
+        price,
+      };
+      onSave(newItem);
     }
   };
 
@@ -141,7 +131,7 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemAdded, item }) => {
         if (group.label === "Custom Labels") {
           return {
             ...group,
-            options: [...group.options, newLabelOption], // Create a new array with the new label
+            options: [...group.options, newLabelOption],
           };
         }
         return group;
@@ -152,7 +142,6 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemAdded, item }) => {
     }
   };
 
-  // Custom styles for react-select
   const customSelectStyles: StylesConfig<LabelOption, true> = {
     control: (provided) => ({
       ...provided,
@@ -201,6 +190,7 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemAdded, item }) => {
           }`}
         />
       </div>
+
       <div
         className={`${styles.formGroup} ${
           emptyFields.includes("labels") ? styles.error : ""
@@ -236,6 +226,7 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemAdded, item }) => {
           </button>
         </div>
       </div>
+
       <div className={styles.formGroup}>
         <label className={styles.label}>Description:</label>
         <textarea
@@ -246,6 +237,7 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemAdded, item }) => {
           }`}
         />
       </div>
+
       <div className={styles.formGroup}>
         <label className={styles.label}>Brand:</label>
         <input
@@ -255,6 +247,7 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemAdded, item }) => {
           className={styles.input}
         />
       </div>
+
       <div className={styles.formGroup}>
         <label className={styles.label}>Size:</label>
         <input
@@ -264,6 +257,7 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemAdded, item }) => {
           className={styles.input}
         />
       </div>
+
       <div className={styles.formGroup}>
         <label className={styles.label}>Color:</label>
         <input
@@ -273,6 +267,7 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemAdded, item }) => {
           className={styles.input}
         />
       </div>
+
       <div className={styles.formGroup}>
         <label className={styles.label}>Price:</label>
         <input
@@ -282,9 +277,11 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemAdded, item }) => {
           className={styles.input}
         />
       </div>
+
       <button type="submit" className={styles.addButton}>
         {item ? "Update Item" : "Add Item"}
       </button>
+
       {error && <div className={styles.errorMessage}>{error}</div>}
     </form>
   );

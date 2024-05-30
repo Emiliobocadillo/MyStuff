@@ -1,6 +1,5 @@
-import React from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
-import { useAuth } from "./context/AuthContext";
+import { useAuth } from "../src/hooks/useAuth";
 import HomePage from "./pages/HomePage";
 import ItemsPage from "./pages/ItemsPage";
 import Navbar from "./components/Navbar";

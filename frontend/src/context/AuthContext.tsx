@@ -1,4 +1,5 @@
-import React, { createContext, useReducer, useContext, ReactNode } from "react";
+// src/context/AuthContext.tsx
+import React, { createContext, useReducer, ReactNode } from "react";
 import {
   authReducer,
   initialState,
@@ -6,7 +7,7 @@ import {
   AuthAction,
 } from "./authReducer";
 
-interface AuthContextType {
+export interface AuthContextType {
   state: AuthState;
   dispatch: React.Dispatch<AuthAction>;
 }
@@ -25,10 +26,4 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   );
 };
 
-export const useAuth = (): AuthContextType => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
-};
+export { AuthContext };

@@ -3,7 +3,7 @@ import { getItems, deleteItem } from "../services/itemsService";
 import ItemRow from "../components/ItemRow";
 import ItemModal from "../components/ItemModal";
 import { Item } from "../types/item";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../hooks/useAuth"; // Update import path
 import styles from "../styles/ItemsPage.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {

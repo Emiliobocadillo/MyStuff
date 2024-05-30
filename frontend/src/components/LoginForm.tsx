@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../hooks/useAuth"; // Update import path
 import styles from "../styles/AuthForm.module.css";
 
 const LoginForm: React.FC = () => {
@@ -31,7 +31,6 @@ const LoginForm: React.FC = () => {
       setError("Invalid email or password");
     }
   };
-
 
   return (
     <form onSubmit={handleLogin} className={styles.form}>

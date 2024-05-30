@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../hooks/useAuth";
 import styles from "../styles/Navbar.module.css"; // Import the CSS module
 
 const Navbar = () => {

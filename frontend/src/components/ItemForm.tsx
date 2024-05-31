@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from "react";
 import Select, { MultiValue, StylesConfig, GroupBase } from "react-select";
 import { getLabels } from "../services/labelService";
-import { Item, NewItem, UpdatedItem } from "../types/item";
+import { Item, NewItem } from "../types/item";
 import styles from "../styles/ItemForm.module.css"; // Import the CSS module
 
 interface ItemFormProps {
-  onSave: (item: NewItem | UpdatedItem) => void;
+  onItemAdded?: (item: NewItem) => void;
+  onItemUpdated?: (item: Item) => void;
   item?: Item | null; // Make item optional
 }
 
 interface LabelOption {
   value: string;
   label: string;
-  isDefault: boolean;
+  isDefault: boolean; // New property to indicate if the label is default
 }
 
 const defaultLabels = [
@@ -23,7 +24,11 @@ const defaultLabels = [
   "Sport/Wellness",
 ];
 
-const ItemForm: React.FC<ItemFormProps> = ({ onSave, item }) => {
+const ItemForm: React.FC<ItemFormProps> = ({
+  onItemAdded,
+  onItemUpdated,
+  item,
+}) => {
   const [name, setName] = useState(item?.name || "");
   const [description, setDescription] = useState(item?.description || "");
   const [quantity, setQuantity] = useState<number>(item?.quantity || 0);
@@ -86,33 +91,21 @@ const ItemForm: React.FC<ItemFormProps> = ({ onSave, item }) => {
       return;
     }
 
-    if (item) {
-      // If item exists, it's an update
-      const updatedItem: UpdatedItem = {
-        _id: item._id,
-        name,
-        description,
-        quantity,
-        labels: combinedLabels,
-        brand,
-        size,
-        color,
-        price,
-      };
-      onSave(updatedItem);
-    } else {
-      // If item doesn't exist, it's a new item
-      const newItem: NewItem = {
-        name,
-        description,
-        quantity,
-        labels: combinedLabels,
-        brand,
-        size,
-        color,
-        price,
-      };
-      onSave(newItem);
+    const newItem: NewItem = {
+      name,
+      description,
+      quantity,
+      labels: combinedLabels,
+      brand,
+      size,
+      color,
+      price,
+    };
+
+    if (item && onItemUpdated) {
+      onItemUpdated({ ...newItem, _id: item._id });
+    } else if (onItemAdded) {
+      onItemAdded(newItem);
     }
   };
 
@@ -131,7 +124,7 @@ const ItemForm: React.FC<ItemFormProps> = ({ onSave, item }) => {
         if (group.label === "Custom Labels") {
           return {
             ...group,
-            options: [...group.options, newLabelOption],
+            options: [...group.options, newLabelOption], // Create a new array with the new label
           };
         }
         return group;
@@ -142,6 +135,7 @@ const ItemForm: React.FC<ItemFormProps> = ({ onSave, item }) => {
     }
   };
 
+  // Custom styles for react-select
   const customSelectStyles: StylesConfig<LabelOption, true> = {
     control: (provided) => ({
       ...provided,
@@ -190,7 +184,6 @@ const ItemForm: React.FC<ItemFormProps> = ({ onSave, item }) => {
           }`}
         />
       </div>
-
       <div
         className={`${styles.formGroup} ${
           emptyFields.includes("labels") ? styles.error : ""
@@ -226,7 +219,6 @@ const ItemForm: React.FC<ItemFormProps> = ({ onSave, item }) => {
           </button>
         </div>
       </div>
-
       <div className={styles.formGroup}>
         <label className={styles.label}>Description:</label>
         <textarea
@@ -237,7 +229,6 @@ const ItemForm: React.FC<ItemFormProps> = ({ onSave, item }) => {
           }`}
         />
       </div>
-
       <div className={styles.formGroup}>
         <label className={styles.label}>Brand:</label>
         <input
@@ -247,7 +238,6 @@ const ItemForm: React.FC<ItemFormProps> = ({ onSave, item }) => {
           className={styles.input}
         />
       </div>
-
       <div className={styles.formGroup}>
         <label className={styles.label}>Size:</label>
         <input
@@ -257,7 +247,6 @@ const ItemForm: React.FC<ItemFormProps> = ({ onSave, item }) => {
           className={styles.input}
         />
       </div>
-
       <div className={styles.formGroup}>
         <label className={styles.label}>Color:</label>
         <input
@@ -267,7 +256,6 @@ const ItemForm: React.FC<ItemFormProps> = ({ onSave, item }) => {
           className={styles.input}
         />
       </div>
-
       <div className={styles.formGroup}>
         <label className={styles.label}>Price:</label>
         <input
@@ -277,11 +265,9 @@ const ItemForm: React.FC<ItemFormProps> = ({ onSave, item }) => {
           className={styles.input}
         />
       </div>
-
       <button type="submit" className={styles.addButton}>
         {item ? "Update Item" : "Add Item"}
       </button>
-
       {error && <div className={styles.errorMessage}>{error}</div>}
     </form>
   );

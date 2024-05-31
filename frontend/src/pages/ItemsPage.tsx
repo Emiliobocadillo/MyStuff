@@ -1,14 +1,9 @@
 import React, { useEffect, useState } from "react";
-import {
-  getItems,
-  createItem,
-  deleteItem,
-  updateItem,
-} from "../services/itemsService";
 import ItemRow from "../components/ItemRow";
 import ItemModal from "../components/ItemModal";
-import { Item, NewItem } from "../types/item";
+import { Item, NewItem} from "../types/item";
 import { useItems } from "../hooks/useItems";
+import { useItemsActions } from "../hooks/useItemsActions";
 import { filterItems } from "../utils/filterItems";
 import styles from "../styles/ItemsPage.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -22,8 +17,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 const ItemsPage: React.FC = () => {
-  const { state, dispatch } = useItems();
+  const { state } = useItems();
   const { items, loading, error } = state;
+  const { fetchItems, handleAddItem, handleUpdateItem, handleDeleteItem } =
+    useItemsActions();
+
   const [filteredItems, setFilteredItems] = useState<Item[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentItem, setCurrentItem] = useState<Item | null>(null);
@@ -31,21 +29,8 @@ const ItemsPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   useEffect(() => {
-    const fetchItems = async () => {
-      dispatch({ type: "FETCH_ITEMS_REQUEST" });
-      try {
-        const items = await getItems();
-        dispatch({ type: "FETCH_ITEMS_SUCCESS", payload: items });
-      } catch (error) {
-        dispatch({
-          type: "FETCH_ITEMS_FAILURE",
-          payload: "Failed to fetch items.",
-        });
-      }
-    };
-
     fetchItems();
-  }, [dispatch]);
+  }, [fetchItems]);
 
   useEffect(() => {
     setFilteredItems(filterItems(items, filter, searchQuery));
@@ -54,52 +39,6 @@ const ItemsPage: React.FC = () => {
   const handleEdit = (item: Item) => {
     setCurrentItem(item);
     setIsModalOpen(true);
-  };
-
-  const handleDeleteItem = async (itemId: string) => {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this item?"
-    );
-    if (!confirmed) {
-      return;
-    }
-
-    try {
-      await deleteItem(itemId);
-      dispatch({ type: "DELETE_ITEM", payload: itemId });
-      setIsModalOpen(false); // Close the modal on delete
-      setCurrentItem(null);
-    } catch (error) {
-      dispatch({
-        type: "FETCH_ITEMS_FAILURE",
-        payload: "Failed to delete item.",
-      });
-    }
-  };
-
-  const handleAddItem = async (newItem: NewItem) => {
-    try {
-      const createdItem = await createItem(newItem);
-      dispatch({ type: "ADD_ITEM", payload: createdItem });
-      setIsModalOpen(false);
-      setCurrentItem(null);
-    } catch (error) {
-      dispatch({ type: "FETCH_ITEMS_FAILURE", payload: "Failed to add item." });
-    }
-  };
-
-  const handleUpdateItem = async (updatedItem: Item) => {
-    try {
-      const result = await updateItem(updatedItem._id, updatedItem);
-      dispatch({ type: "UPDATE_ITEM", payload: result });
-      setIsModalOpen(false);
-      setCurrentItem(null);
-    } catch (error) {
-      dispatch({
-        type: "FETCH_ITEMS_FAILURE",
-        payload: "Failed to update item.",
-      });
-    }
   };
 
   const handleModalClose = () => {
@@ -197,9 +136,15 @@ const ItemsPage: React.FC = () => {
         <ItemModal
           isOpen={isModalOpen}
           onRequestClose={handleModalClose}
-          onItemAdded={handleAddItem}
-          onItemUpdated={handleUpdateItem}
-          onDelete={handleDeleteItem} // Pass the delete function to the modal
+          onAddItem={(newItem: NewItem) =>
+            handleAddItem(newItem, handleModalClose)
+          }
+          onUpdateItem={(updatedItem: Item) =>
+            handleUpdateItem(updatedItem, handleModalClose)
+          }
+          onDeleteItem={(itemId: string) =>
+            handleDeleteItem(itemId, handleModalClose)
+          }
           item={currentItem} // Pass the current item to the modal for editing
         />
       </div>

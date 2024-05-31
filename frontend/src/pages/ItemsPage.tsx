@@ -1,20 +1,15 @@
+// src/pages/ItemsPage.tsx
 import React, { useEffect, useState } from "react";
 import ItemRow from "../components/ItemRow";
 import ItemModal from "../components/ItemModal";
-import { Item, NewItem} from "../types/item";
+import { Item, NewItem } from "../types/item";
 import { useItems } from "../hooks/useItems";
 import { useItemsActions } from "../hooks/useItemsActions";
 import { filterItems } from "../utils/filterItems";
+import { defaultLabels } from "../constants/defaultLabels"; // Import default labels
 import styles from "../styles/ItemsPage.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faTshirt,
-  faUtensils,
-  faCouch,
-  faDumbbell,
-  faBars,
-  faPlug,
-} from "@fortawesome/free-solid-svg-icons";
+import { faBars } from "@fortawesome/free-solid-svg-icons"; // Import the "All" icon separately
 
 const ItemsPage: React.FC = () => {
   const { state } = useItems();
@@ -81,13 +76,7 @@ const ItemsPage: React.FC = () => {
             className={styles.searchInput}
           />
           <div className={styles.filterButtons}>
-            {[
-              { label: "Clothes", icon: faTshirt },
-              { label: "Electronics", icon: faPlug },
-              { label: "Kitchen", icon: faUtensils },
-              { label: "Furniture", icon: faCouch },
-              { label: "Sport/Wellness", icon: faDumbbell },
-            ].map(({ label, icon }) => (
+            {defaultLabels.map(({ label, icon }) => (
               <button
                 key={label}
                 onClick={() => handleFilter(label)}

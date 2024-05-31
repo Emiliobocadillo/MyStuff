@@ -1,3 +1,4 @@
+// labelController.ts
 import { Request, Response, NextFunction } from "express";
 import ItemModel from "../models/itemModel";
 import createHttpError from "http-errors";
@@ -7,15 +8,6 @@ interface AuthenticatedRequest extends Request {
     id: string;
   };
 }
-
-// Default labels
-const defaultLabels = [
-  "Clothes",
-  "Electronics",
-  "Kitchen",
-  "Furniture",
-  "Sport/Wellness",
-];
 
 // Get all labels for the authenticated user
 export const getLabels = async (
@@ -30,7 +22,7 @@ export const getLabels = async (
     }
 
     const items = await ItemModel.find({ user: userId });
-    const labels = new Set<string>(defaultLabels);
+    const labels = new Set<string>();
 
     // Add user-specific labels
     items.forEach((item) => {

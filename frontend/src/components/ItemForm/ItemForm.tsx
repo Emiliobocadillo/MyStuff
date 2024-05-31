@@ -101,7 +101,7 @@ const ItemForm: React.FC<ItemFormProps> = ({
           className={`${styles.input} ${
             emptyFields.includes("quantity") ? styles.errorInput : ""
           }`}
-          min="1"
+          // min="1"
         />
       </div>
 

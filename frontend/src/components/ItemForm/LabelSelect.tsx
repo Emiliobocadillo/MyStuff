@@ -1,22 +1,25 @@
 // src/components/ItemForm/LabelSelect.tsx
 import React, { useState, useEffect } from "react";
-import Select, { MultiValue, StylesConfig, GroupBase } from "react-select";
+import Select, {
+  MultiValue,
+  StylesConfig,
+  GroupBase,
+  components,
+  OptionProps,
+  SingleValueProps,
+} from "react-select";
 import { getLabels } from "../../services/labelService";
+import { defaultLabels } from "../../constants/defaultLabels"; // Import default labels
 import styles from "../../styles/ItemForm.module.css"; // Adjust the path if necessary
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 
 interface LabelOption {
   value: string;
   label: string;
+  icon?: IconDefinition;
   isDefault: boolean;
 }
-
-const defaultLabels = [
-  "Clothes",
-  "Electronics",
-  "Kitchen",
-  "Furniture",
-  "Sport/Wellness",
-];
 
 interface LabelSelectProps {
   selectedLabels: string[];
@@ -35,12 +38,27 @@ const LabelSelect: React.FC<LabelSelectProps> = ({
   useEffect(() => {
     const fetchLabels = async () => {
       try {
-        const labels = await getLabels();
-        const labelOptions: LabelOption[] = labels.map((label) => ({
-          value: label,
-          label,
-          isDefault: defaultLabels.includes(label),
-        }));
+        const customLabels = await getLabels();
+        const labelOptions: LabelOption[] = [
+          ...defaultLabels.map((labelObj) => ({
+            value: labelObj.label,
+            label: labelObj.label,
+            icon: labelObj.icon,
+            isDefault: true,
+          })),
+          ...customLabels
+            .filter(
+              (label) =>
+                !defaultLabels.some(
+                  (defaultLabel) => defaultLabel.label === label
+                )
+            )
+            .map((label) => ({
+              value: label,
+              label,
+              isDefault: false,
+            })),
+        ];
         const groupedLabels = [
           {
             label: "Default Categories",
@@ -65,6 +83,19 @@ const LabelSelect: React.FC<LabelSelectProps> = ({
 
   const handleAddNewLabel = () => {
     if (newLabel.trim() !== "") {
+      // Check if the new label already exists
+      const existingLabel = allLabels
+        .flatMap((group) => group.options)
+        .find(
+          (option) => option.label.toLowerCase() === newLabel.toLowerCase()
+        );
+
+      if (existingLabel) {
+        alert("This label already exists. Please enter a different label.");
+        setNewLabel("");
+        return;
+      }
+
       const newLabelOption: LabelOption = {
         value: newLabel,
         label: newLabel,
@@ -99,6 +130,36 @@ const LabelSelect: React.FC<LabelSelectProps> = ({
     }),
   };
 
+  // Custom Option component to include icons
+  const Option = (props: OptionProps<LabelOption>) => {
+    return (
+      <components.Option {...props}>
+        {props.data.icon && (
+          <FontAwesomeIcon
+            icon={props.data.icon}
+            style={{ marginRight: "8px" }}
+          />
+        )}
+        {props.data.label}
+      </components.Option>
+    );
+  };
+
+  // Custom SingleValue component to include icons
+  const SingleValue = (props: SingleValueProps<LabelOption>) => {
+    return (
+      <components.SingleValue {...props}>
+        {props.data.icon && (
+          <FontAwesomeIcon
+            icon={props.data.icon}
+            style={{ marginRight: "8px" }}
+          />
+        )}
+        {props.data.label}
+      </components.SingleValue>
+    );
+  };
+
   return (
     <div
       className={`${styles.formGroup} ${
@@ -115,6 +176,7 @@ const LabelSelect: React.FC<LabelSelectProps> = ({
         onChange={handleSelectChange}
         closeMenuOnSelect={false}
         styles={customSelectStyles}
+        components={{ Option, SingleValue }} // Use custom components
       />
       <div className={styles.newLabelContainer}>
         <input

@@ -1,6 +1,6 @@
 import React from "react";
 import Modal from "react-modal";
-import ItemForm from "./ItemForm";
+import ItemForm from "./ItemForm/ItemForm";
 import { Item, NewItem } from "../types/item";
 import styles from "../styles/ItemModal.module.css"; // Import the CSS module
 

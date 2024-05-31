@@ -9,6 +9,7 @@ import ItemRow from "../components/ItemRow";
 import ItemModal from "../components/ItemModal";
 import { Item, NewItem } from "../types/item";
 import { useItems } from "../hooks/useItems";
+import { filterItems } from "../utils/filterItems";
 import styles from "../styles/ItemsPage.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -47,27 +48,7 @@ const ItemsPage: React.FC = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    let filtered = items;
-
-    if (filter) {
-      filtered = filtered.filter((item) => item.labels.includes(filter));
-    }
-
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(
-        (item) =>
-          item.name.toLowerCase().includes(query) ||
-          (item.description &&
-            item.description.toLowerCase().includes(query)) ||
-          item.labels.some((label) => label.toLowerCase().includes(query)) ||
-          (item.brand && item.brand.toLowerCase().includes(query)) ||
-          (item.size && item.size.toLowerCase().includes(query)) ||
-          (item.color && item.color.toLowerCase().includes(query))
-      );
-    }
-
-    setFilteredItems(filtered);
+    setFilteredItems(filterItems(items, filter, searchQuery));
   }, [filter, searchQuery, items]);
 
   const handleEdit = (item: Item) => {

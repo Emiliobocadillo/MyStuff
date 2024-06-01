@@ -3,6 +3,8 @@ import Modal from "react-modal";
 import ItemForm from "./ItemForm/ItemForm";
 import { Item, NewItem } from "../types/item";
 import styles from "../styles/ItemModal.module.css"; // Import the CSS module
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTimes, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 Modal.setAppElement("#root"); // Bind modal to your appElement
 
@@ -40,15 +42,17 @@ const ItemModal: React.FC<ItemModalProps> = ({
         />
         <div className={styles.buttonGroup}>
           <button onClick={onRequestClose} className={styles.closeButton}>
-            Close
-          </button>
-          {item && (
-            <button
-              onClick={() => onDeleteItem(item._id)}
-              className={styles.deleteButton}
-            >
-              Delete Item
-            </button>
+    <FontAwesomeIcon icon={faTimes} style={{ marginRight: "8px" }} />
+    Close
+</button>
+{item && (
+    <button
+        onClick={() => onDeleteItem(item._id)}
+        className={styles.deleteButton}
+    >
+        <FontAwesomeIcon icon={faTrash} style={{ marginRight: "8px" }} />
+        Delete Item
+    </button>
           )}
         </div>
       </div>

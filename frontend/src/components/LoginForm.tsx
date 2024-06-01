@@ -3,6 +3,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth"; // Update import path
 import styles from "../styles/AuthForm.module.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSignInAlt } from "@fortawesome/free-solid-svg-icons";
 
 const LoginForm: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -57,6 +59,7 @@ const LoginForm: React.FC = () => {
         />
       </div>
       <button type="submit" className={styles.button}>
+        <FontAwesomeIcon icon={faSignInAlt} style={{ marginRight: "8px" }} />
         Login
       </button>
     </form>

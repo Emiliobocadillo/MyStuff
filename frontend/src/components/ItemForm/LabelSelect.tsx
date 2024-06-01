@@ -13,6 +13,7 @@ import { defaultLabels } from "../../constants/defaultLabels"; // Import default
 import styles from "../../styles/ItemForm.module.css"; // Adjust the path if necessary
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+import { faPlus } from "@fortawesome/free-solid-svg-icons"; // Import the "All" and "Plus" icons separately
 
 interface LabelOption {
   value: string;
@@ -193,7 +194,8 @@ const LabelSelect: React.FC<LabelSelectProps> = ({
           onClick={handleAddNewLabel}
           className={styles.addButton}
         >
-          Add
+          <FontAwesomeIcon icon={faPlus}  />
+          {/* Add  */}
         </button>
       </div>
     </div>

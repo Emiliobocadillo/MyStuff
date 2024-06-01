@@ -6,10 +6,8 @@ import { Item, NewItem } from "../types/item";
 import { useItems } from "../hooks/useItems";
 import { useItemsActions } from "../hooks/useItemsActions";
 import { filterItems } from "../utils/filterItems";
-import { defaultLabels } from "../constants/defaultLabels"; // Import default labels
 import styles from "../styles/ItemsPage.module.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars } from "@fortawesome/free-solid-svg-icons"; // Import the "All" icon separately
+import ActionBar from "../components/ActionBar"; // Import the new ActionBar component
 
 const ItemsPage: React.FC = () => {
   const { state } = useItems();
@@ -61,53 +59,15 @@ const ItemsPage: React.FC = () => {
     <div className={isModalOpen ? styles.blurred : ""}>
       <div className={styles.container}>
         <h1>Items Page</h1>
-        <div className={styles.actionBar}>
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className={styles.addButton}
-          >
-            + Add New Item
-          </button>
-          <input
-            type="text"
-            placeholder="Search..."
-            value={searchQuery}
-            onChange={handleSearchChange}
-            className={styles.searchInput}
-          />
-          <div className={styles.filterButtons}>
-            {defaultLabels.map(({ label, icon }) => (
-              <button
-                key={label}
-                onClick={() => handleFilter(label)}
-                className={`${styles.filterButton} ${
-                  filter === label ? styles.activeFilter : ""
-                }`}
-              >
-                <FontAwesomeIcon
-                  icon={icon}
-                  className={filter === label ? "fa-spin" : ""}
-                  style={{ marginRight: "8px" }}
-                />
-                {label}
-              </button>
-            ))}
-            <button
-              onClick={() => setFilter(null)}
-              className={`${styles.filterButton} ${
-                filter === null ? styles.activeFilter : ""
-              }`}
-            >
-              <FontAwesomeIcon
-                icon={faBars}
-                className={filter === null ? "fa-spin" : ""}
-                style={{ marginRight: "8px" }}
-              />
-              All
-            </button>
-          </div>
-        </div>
-        <div className={styles.table}>
+        <ActionBar
+          setIsModalOpen={setIsModalOpen}
+          searchQuery={searchQuery}
+          handleSearchChange={handleSearchChange}
+          filter={filter}
+          setFilter={setFilter}
+          handleFilter={handleFilter}
+        />
+        <div className={styles.tableContainer}>
           <div className={`${styles.header} ${styles.row}`}>
             <div className={styles.cell}>Name</div>
             <div className={styles.cell}>Description</div>
@@ -118,9 +78,11 @@ const ItemsPage: React.FC = () => {
             <div className={styles.cell}>Color</div>
             <div className={styles.cell}>Price</div>
           </div>
-          {filteredItems.map((item) => (
-            <ItemRow key={item._id} item={item} onEdit={handleEdit} />
-          ))}
+          <div className={styles.tableBody}>
+            {filteredItems.map((item) => (
+              <ItemRow key={item._id} item={item} onEdit={handleEdit} />
+            ))}
+          </div>
         </div>
         <ItemModal
           isOpen={isModalOpen}

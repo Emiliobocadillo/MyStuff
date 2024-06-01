@@ -3,6 +3,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth"; // Update import path
 import styles from "../styles/AuthForm.module.css"; // Import the CSS module
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUserPlus } from "@fortawesome/free-solid-svg-icons";
 
 const RegisterForm: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -57,6 +59,7 @@ const RegisterForm: React.FC = () => {
         />
       </div>
       <button type="submit" className={styles.button}>
+        <FontAwesomeIcon icon={faUserPlus} style={{ marginRight: "8px" }} />
         Register
       </button>
     </form>

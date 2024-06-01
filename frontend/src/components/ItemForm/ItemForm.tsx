@@ -3,6 +3,9 @@ import React, { useState } from "react";
 import { Item, NewItem } from "../../types/item";
 import LabelSelect from "./LabelSelect";
 import styles from "../../styles/ItemForm.module.css"; // Import the CSS module
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
+
 
 interface ItemFormProps {
   onItemAdded?: (item: NewItem) => void;
@@ -163,6 +166,10 @@ const ItemForm: React.FC<ItemFormProps> = ({
       </div>
 
       <button type="submit" className={styles.addButton}>
+        <FontAwesomeIcon
+          icon={item ? faEdit : faPlus}
+          style={{ marginRight: "8px" }}
+        />
         {item ? "Update Item" : "Add Item"}
       </button>
       {error && <div className={styles.errorMessage}>{error}</div>}

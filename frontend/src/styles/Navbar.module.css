@@ -1,9 +1,14 @@
+/* src/styles/Navbar.module.css */
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
+  padding: 20px 20px;
   background-color: #282c34;
+  position: fixed; /* Make the navbar fixed */
+  top: 0; /* Position it at the top */
+  width: 100%; /* Make it span the full width */
+  z-index: 1000; /* Ensure it stays above other elements */
 }
 
 .logo {

@@ -5,6 +5,7 @@ import ItemsPage from "./pages/ItemsPage";
 import Navbar from "./components/Navbar";
 import LoginForm from "./components/LoginForm";
 import RegisterForm from "./components/RegisterForm";
+import "./styles/global.css"; // Import global styles
 
 const App = () => {
   const { state } = useAuth();

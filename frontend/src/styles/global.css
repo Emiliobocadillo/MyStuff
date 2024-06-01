@@ -1,0 +1,12 @@
+/* src/styles/global.css (create this file if it doesn't exist) */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  box-sizing: border-box; /* Ensure padding is included in width calculation */
+}
+
+/* Apply box-sizing: border-box to all elements */
+*, *::before, *::after {
+  box-sizing: inherit;
+}

@@ -66,7 +66,7 @@ const ItemsPage: React.FC = () => {
             onClick={() => setIsModalOpen(true)}
             className={styles.addButton}
           >
-            Add New Item
+            + Add New Item
           </button>
           <input
             type="text"

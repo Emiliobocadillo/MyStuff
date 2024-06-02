@@ -26,6 +26,9 @@ const Navbar = () => {
         <Link to="/items" className={styles.link}>
           Items
         </Link>
+        <Link to="/analytics" className={styles.link}>
+          Analytics
+        </Link>
         {userEmail ? (
           <>
             <span className={styles.userEmail}>{userEmail}</span>

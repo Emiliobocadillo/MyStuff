@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { validationResult } from "express-validator";
 import ItemModel from "../models/itemModel";
 import createHttpError from "http-errors";
+import mongoose from "mongoose";
 
 interface AuthenticatedRequest extends Request {
   user?: {
@@ -150,29 +151,52 @@ export const getAnalytics = async (
   try {
     const userId = req.user?.id;
 
+    console.log("User ID:", userId); // Verify User ID
+
     // Total items
     const totalItems = await ItemModel.countDocuments({ user: userId });
 
-    // Items by category
-    const itemsByCategory = await ItemModel.aggregate([
-      { $match: { user: userId } },
+    // Simplified Items by category (labels)
+    const itemsByCategoryDebug = await ItemModel.aggregate([
+      { $match: { user: new mongoose.Types.ObjectId(userId) } },
       { $unwind: "$labels" },
       { $group: { _id: "$labels", count: { $sum: 1 } } },
+      { $project: { _id: 0, label: "$_id", count: 1 } },
     ]);
 
-    // Total value of items
-    const totalValue = await ItemModel.aggregate([
-      { $match: { user: userId } },
-      { $group: { _id: null, total: { $sum: "$price" } } },
+    console.log("Items by Category Debug:", itemsByCategoryDebug);
+
+    // Simplified Total value of items
+    const totalValueDebug = await ItemModel.aggregate([
+      {
+        $match: {
+          user: new mongoose.Types.ObjectId(userId),
+          price: { $gt: 0 },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: "$price" },
+        },
+      },
     ]);
+
+    console.log("Total Value Debug:", totalValueDebug);
 
     res.json({
       totalItems,
-      itemsByCategory,
-      totalValue: totalValue[0]?.total || 0,
+      itemsByCategory: itemsByCategoryDebug,
+      totalValue: totalValueDebug[0]?.total || 0,
     });
   } catch (err) {
     const error = err as Error;
     next(createHttpError(500, error.message));
   }
 };
+
+
+
+
+
+

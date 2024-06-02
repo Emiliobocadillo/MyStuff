@@ -1,0 +1,49 @@
+/* src/styles/AnalyticsPage.module.css */
+.analyticsContainer {
+  margin-top: 5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: #f9f9f9;
+  min-height: 100vh; /* Ensure the container takes the full height of the viewport */
+}
+
+.analyticsContainer h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.chartContainer {
+  width: 80%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.valuesContainer {
+  display: flex;
+  justify-content: space-around;
+  width: 80%;
+  max-width: 800px;
+  margin-top: 20px;
+}
+
+.valueItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.valueItem h2 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: #555;
+}
+
+.value {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333;
+}

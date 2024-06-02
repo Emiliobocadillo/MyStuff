@@ -101,5 +101,21 @@ export const useItemsActions = () => {
     [dispatch]
   );
 
-  return { fetchItems, handleAddItem, handleUpdateItem, handleDeleteItem };
+  const fetchAnalytics = useCallback(async () => {
+    try {
+      const response = await api.get("/items/analytics");
+      return response.data;
+    } catch (error) {
+      toast.error("Failed to fetch analytics.");
+      throw error;
+    }
+  }, []);
+
+  return {
+    fetchItems,
+    handleAddItem,
+    handleUpdateItem,
+    handleDeleteItem,
+    fetchAnalytics,
+  };
 };

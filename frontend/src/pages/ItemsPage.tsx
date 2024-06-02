@@ -1,13 +1,13 @@
 // src/pages/ItemsPage.tsx
 import React, { useEffect, useState } from "react";
-import ItemRow from "../components/ItemRow";
 import ItemModal from "../components/ItemModal";
 import { Item, NewItem } from "../types/item";
 import { useItems } from "../hooks/useItems";
 import { useItemsActions } from "../hooks/useItemsActions";
 import { filterItems } from "../utils/filterItems";
 import styles from "../styles/ItemsPage.module.css";
-import ActionBar from "../components/ActionBar"; // Import the new ActionBar component
+import ActionBar from "../components/ActionBar";
+import ItemTable from "../components/ItemTable"; // Import the new ItemTable component
 
 const ItemsPage: React.FC = () => {
   const { state } = useItems();
@@ -67,23 +67,7 @@ const ItemsPage: React.FC = () => {
           setFilter={setFilter}
           handleFilter={handleFilter}
         />
-        <div className={styles.tableContainer}>
-          <div className={`${styles.header} ${styles.row}`}>
-            <div className={styles.cell}>Name</div>
-            <div className={styles.cell}>Description</div>
-            <div className={styles.cell}>Quantity</div>
-            <div className={styles.cell}>Labels</div>
-            <div className={styles.cell}>Brand</div>
-            <div className={styles.cell}>Size</div>
-            <div className={styles.cell}>Color</div>
-            <div className={styles.cell}>Price</div>
-          </div>
-          <div className={styles.tableBody}>
-            {filteredItems.map((item) => (
-              <ItemRow key={item._id} item={item} onEdit={handleEdit} />
-            ))}
-          </div>
-        </div>
+        <ItemTable filteredItems={filteredItems} handleEdit={handleEdit} />
         <ItemModal
           isOpen={isModalOpen}
           onRequestClose={handleModalClose}

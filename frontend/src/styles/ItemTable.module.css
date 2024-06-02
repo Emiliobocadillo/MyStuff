@@ -1,0 +1,173 @@
+:root {
+  --header-name-bg: #a8d8ea;
+  --header-description-bg: #ffb6b9;
+  --header-quantity-bg: #c1e1c1;
+  --header-labels-bg: #f7d794;
+  --header-brand-bg: #e2c6e6;
+  --header-size-bg: #b3d3e5;
+  --header-color-bg: #ffc1e3;
+  --header-price-bg: #e6ee9c;
+
+  /* Lighter versions */
+  --body-name-bg: rgba(168, 216, 234, 0.3);
+  --body-description-bg: rgba(255, 182, 185, 0.3);
+  --body-quantity-bg: rgba(193, 225, 193, 0.3);
+  --body-labels-bg: rgba(247, 215, 148, 0.3);
+  --body-brand-bg: rgba(226, 198, 230, 0.3);
+  --body-size-bg: rgba(179, 211, 229, 0.3);
+  --body-color-bg: rgba(255, 193, 227, 0.3);
+  --body-price-bg: rgba(230, 238, 156, 0.3);
+}
+
+.tableContainer {
+  width: 100%;
+  overflow-y: auto;
+  max-height: calc(100vh - 200px); /* Adjust as necessary */
+}
+
+.tableHeader {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  font-weight: bold;
+  font-size: 22px;
+  display: flex;
+}
+
+.row {
+  display: flex;
+  align-items: stretch; /* Ensure rows stretch to full height */
+  border-bottom: 1px solid #ccc;
+  min-height: 50px; /* Set a consistent minimum height for rows */
+  box-sizing: border-box; /* Ensure padding and border are included in the element's total width and height */
+}
+
+.cell {
+  flex: 1;
+  padding: 10px;
+  text-align: left;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  box-sizing: border-box;
+  background-color: inherit; /* Inherit background color */
+}
+
+.tableBody .row:nth-child(even) .cell {
+  background-color: #f8f9fa; /* Slight background color for even rows */
+}
+
+.tableBody .row:nth-child(odd) .cell {
+  background-color: #ffffff; /* White background color for odd rows */
+}
+
+.tableHeader .cell:nth-child(1) {
+  background-color: var(--header-name-bg);
+}
+
+.tableHeader .cell:nth-child(2) {
+  background-color: var(--header-description-bg);
+}
+
+.tableHeader .cell:nth-child(3) {
+  background-color: var(--header-quantity-bg);
+}
+
+.tableHeader .cell:nth-child(4) {
+  background-color: var(--header-labels-bg);
+}
+
+.tableHeader .cell:nth-child(5) {
+  background-color: var(--header-brand-bg);
+}
+
+.tableHeader .cell:nth-child(6) {
+  background-color: var(--header-size-bg);
+}
+
+.tableHeader .cell:nth-child(7) {
+  background-color: var(--header-color-bg);
+}
+
+.tableHeader .cell:nth-child(8) {
+  background-color: var(--header-price-bg);
+}
+
+.tableBody .row:nth-child(odd) .cell:nth-child(1),
+.tableBody .row:nth-child(even) .cell:nth-child(1) {
+  background-color: var(--body-name-bg); /* Lighter color for Name cells */
+}
+
+.tableBody .row:nth-child(odd) .cell:nth-child(2),
+.tableBody .row:nth-child(even) .cell:nth-child(2) {
+  background-color: var(--body-description-bg); /* Lighter color for Description cells */
+}
+
+.tableBody .row:nth-child(odd) .cell:nth-child(3),
+.tableBody .row:nth-child(even) .cell:nth-child(3) {
+  background-color: var(--body-quantity-bg); /* Lighter color for Quantity cells */
+}
+
+.tableBody .row:nth-child(odd) .cell:nth-child(4),
+.tableBody .row:nth-child(even) .cell:nth-child(4) {
+  background-color: var(--body-labels-bg); /* Lighter color for Labels cells */
+}
+
+.tableBody .row:nth-child(odd) .cell:nth-child(5),
+.tableBody .row:nth-child(even) .cell:nth-child(5) {
+  background-color: var(--body-brand-bg); /* Lighter color for Brand cells */
+}
+
+.tableBody .row:nth-child(odd) .cell:nth-child(6),
+.tableBody .row:nth-child(even) .cell:nth-child(6) {
+  background-color: var(--body-size-bg); /* Lighter color for Size cells */
+}
+
+.tableBody .row:nth-child(odd) .cell:nth-child(7),
+.tableBody .row:nth-child(even) .cell:nth-child(7) {
+  background-color: var(--body-color-bg); /* Lighter color for Color cells */
+}
+
+.tableBody .row:nth-child(odd) .cell:nth-child(8),
+.tableBody .row:nth-child(even) .cell:nth-child(8) {
+  background-color: var(--body-price-bg); /* Lighter color for Price cells */
+}
+
+/* Hover styles */
+.tableBody .row:hover .cell:nth-child(1) {
+  background-color: var(--header-name-bg);
+}
+
+.tableBody .row:hover .cell:nth-child(2) {
+  background-color: var(--header-description-bg);
+}
+
+.tableBody .row:hover .cell:nth-child(3) {
+  background-color: var(--header-quantity-bg);
+}
+
+.tableBody .row:hover .cell:nth-child(4) {
+  background-color: var(--header-labels-bg);
+}
+
+.tableBody .row:hover .cell:nth-child(5) {
+  background-color: var(--header-brand-bg);
+}
+
+.tableBody .row:hover .cell:nth-child(6) {
+  background-color: var(--header-size-bg);
+}
+
+.tableBody .row:hover .cell:nth-child(7) {
+  background-color: var(--header-color-bg);
+}
+
+.tableBody .row:hover .cell:nth-child(8) {
+  background-color: var(--header-price-bg);
+}
+
+.tableBody {
+  overflow-y: auto;
+  max-height: calc(100vh - 500px); /* Adjust as necessary */
+}

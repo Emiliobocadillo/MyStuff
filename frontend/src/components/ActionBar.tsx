@@ -1,7 +1,7 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faBars } from "@fortawesome/free-solid-svg-icons";
-import styles from "../styles/ItemsPage.module.css"; // Adjust the path if necessary
+import styles from "../styles/ActionBar.module.css"; // Adjust the path if necessary
 import { defaultLabels } from "../constants/defaultLabels"; // Import default labels
 
 interface ActionBarProps {

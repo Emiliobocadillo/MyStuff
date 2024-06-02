@@ -1,0 +1,61 @@
+/* src/styles/ActionBar.module.css */
+
+.actionBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.addButton {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+  flex-shrink: 0;
+}
+
+.addButton:hover {
+  background-color: #45a049;
+}
+
+.searchInput {
+  margin: 0 20px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  flex-grow: 1;
+}
+
+.filterButtons {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.filterButton {
+  background-color: #008cba;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.filterButton:hover {
+  background-color: #007bb5;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.filterButton:active {
+  background-color: #006494;
+}
+
+.activeFilter {
+  background-color: #005f8d;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}

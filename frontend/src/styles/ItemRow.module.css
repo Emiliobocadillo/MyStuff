@@ -1,25 +1,26 @@
-/* ItemRow.module.css */
 .row {
   display: flex;
-  align-items: center;
+  align-items: stretch; /* Ensure rows stretch to full height */
   border-bottom: 1px solid #ccc;
-  padding: 10px 0;
   cursor: pointer; /* Indicate that the row is clickable */
   transition: background-color 0.3s; /* Smooth transition for the hover effect */
+  min-height: 50px; /* Set a consistent minimum height for rows */
+  box-sizing: border-box; /* Ensure padding and border are included in the element's total width and height */
 }
 
-.row:hover {
-  background-color: #f1f1f1; /* Change background color on hover */
-  font-weight: 700;
-}
 
 .cell {
   flex: 1;
-  padding: 0 10px;
+  padding: 10px;
   text-align: left;
   overflow: hidden;
+  display: flex; /* Use flex display */
+  align-items: center; /* Center content vertically */
+  justify-content: center; /* Center content horizontally */
+  margin: 0; /* Reset margin */
+  box-sizing: border-box; /* Include padding and border in element's total width and height */
+  background-color: inherit; /* Inherit background color */
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
-  /* mask-image: linear-gradient(180deg, #000 60%, transparent); */
 }

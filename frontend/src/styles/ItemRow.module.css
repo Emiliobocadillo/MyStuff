@@ -8,6 +8,11 @@
   box-sizing: border-box; /* Ensure padding and border are included in the element's total width and height */
 }
 
+.row:hover {
+  font-weight: 900;
+  text-decoration: underline;
+  border: 1px black solid;
+}
 
 .cell {
   flex: 1;

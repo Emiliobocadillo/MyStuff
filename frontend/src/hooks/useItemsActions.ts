@@ -3,6 +3,8 @@ import { useCallback } from "react";
 import { useItems } from "./useItems";
 import { Item, NewItem } from "../types/item";
 import axios from "axios";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // Create an Axios instance
 const api = axios.create({
@@ -31,6 +33,7 @@ export const useItemsActions = () => {
         type: "FETCH_ITEMS_FAILURE",
         payload: "Failed to fetch items.",
       });
+      toast.error("Failed to fetch items.");
     }
   }, [dispatch]);
 
@@ -40,11 +43,13 @@ export const useItemsActions = () => {
         const response = await api.post<Item>("/items", newItem);
         dispatch({ type: "ADD_ITEM", payload: response.data });
         callback();
+        toast.success("Item added successfully!");
       } catch (error) {
         dispatch({
           type: "FETCH_ITEMS_FAILURE",
           payload: "Failed to add item.",
         });
+        toast.error("Failed to add item.");
       }
     },
     [dispatch]
@@ -59,11 +64,13 @@ export const useItemsActions = () => {
         );
         dispatch({ type: "UPDATE_ITEM", payload: response.data });
         callback();
+        toast.success("Item updated successfully!");
       } catch (error) {
         dispatch({
           type: "FETCH_ITEMS_FAILURE",
           payload: "Failed to update item.",
         });
+        toast.error("Failed to update item.");
       }
     },
     [dispatch]
@@ -82,11 +89,13 @@ export const useItemsActions = () => {
         await api.delete(`/items/${itemId}`);
         dispatch({ type: "DELETE_ITEM", payload: itemId });
         callback();
+        toast.success("Item deleted successfully!");
       } catch (error) {
         dispatch({
           type: "FETCH_ITEMS_FAILURE",
           payload: "Failed to delete item.",
         });
+        toast.error("Failed to delete item.");
       }
     },
     [dispatch]

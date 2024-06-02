@@ -6,6 +6,7 @@ import {
   updateItem,
   deleteItem,
   createMultipleItems,
+  getAnalytics,
 } from "../controllers/itemController";
 import {
   validateCreateItem,
@@ -21,6 +22,7 @@ router.get("/:id", getItem);
 router.post("/", validateCreateItem, createItem); // Add validation middleware
 router.patch("/:id", validateUpdateItem, updateItem); // Add validation middleware
 router.delete("/:id", deleteItem);
-router.post("/bulk", requireAuth, createMultipleItems); 
+router.post("/bulk", createMultipleItems);
+router.get("/analytics", getAnalytics); // Add the analytics route
 
 export default router;

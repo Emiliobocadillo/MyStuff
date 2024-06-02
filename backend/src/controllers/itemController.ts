@@ -70,7 +70,6 @@ export const createItem = async (
   }
 };
 
-
 // Update an item by ID for the authenticated user
 export const updateItem = async (
   req: AuthenticatedRequest,
@@ -136,8 +135,44 @@ export const createMultipleItems = async (
     }
     const savedItems = await ItemModel.insertMany(items);
     res.status(201).json(savedItems);
-  } catch (error) {
-    next(error);
+  } catch (err) {
+    const error = err as Error;
+    next(createHttpError(500, error.message));
   }
 };
 
+// Get aggregated analytics data for the authenticated user
+export const getAnalytics = async (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const userId = req.user?.id;
+
+    // Total items
+    const totalItems = await ItemModel.countDocuments({ user: userId });
+
+    // Items by category
+    const itemsByCategory = await ItemModel.aggregate([
+      { $match: { user: userId } },
+      { $unwind: "$labels" },
+      { $group: { _id: "$labels", count: { $sum: 1 } } },
+    ]);
+
+    // Total value of items
+    const totalValue = await ItemModel.aggregate([
+      { $match: { user: userId } },
+      { $group: { _id: null, total: { $sum: "$price" } } },
+    ]);
+
+    res.json({
+      totalItems,
+      itemsByCategory,
+      totalValue: totalValue[0]?.total || 0,
+    });
+  } catch (err) {
+    const error = err as Error;
+    next(createHttpError(500, error.message));
+  }
+};

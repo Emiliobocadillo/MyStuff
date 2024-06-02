@@ -23,6 +23,7 @@
   width: 100%;
   overflow-y: auto;
   max-height: calc(100vh - 200px); /* Adjust as necessary */
+  border-radius: 4px;
 }
 
 .tableHeader {
@@ -159,4 +160,5 @@
 .tableBody {
   overflow-y: auto;
   max-height: calc(100vh - 500px); /* Adjust as necessary */
+  border-top: 3px black solid;
 }

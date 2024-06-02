@@ -1,23 +1,33 @@
 // src/components/ItemForm/ItemForm.tsx
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Item, NewItem } from "../../types/item";
 import LabelSelect from "./LabelSelect";
-import styles from "../../styles/ItemForm.module.css"; // Import the CSS module
+import styles from "../../styles/ItemForm.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
-
 
 interface ItemFormProps {
   onItemAdded?: (item: NewItem) => void;
   onItemUpdated?: (item: Item) => void;
-  item?: Item | null; // Make item optional
+  item?: Item | null;
+  fieldName?: string | null;
 }
 
 const ItemForm: React.FC<ItemFormProps> = ({
   onItemAdded,
   onItemUpdated,
   item,
+  fieldName,
 }) => {
+  const nameRef = useRef<HTMLInputElement>(null);
+  const descriptionRef = useRef<HTMLTextAreaElement>(null);
+  const quantityRef = useRef<HTMLInputElement>(null);
+  const labelsRef = useRef<HTMLInputElement>(null);
+  const brandRef = useRef<HTMLInputElement>(null);
+  const sizeRef = useRef<HTMLInputElement>(null);
+  const colorRef = useRef<HTMLInputElement>(null);
+  const priceRef = useRef<HTMLInputElement>(null);
+
   const [name, setName] = useState(item?.name || "");
   const [description, setDescription] = useState(item?.description || "");
   const [quantity, setQuantity] = useState<number>(item?.quantity || 0);
@@ -30,6 +40,51 @@ const ItemForm: React.FC<ItemFormProps> = ({
   const [price, setPrice] = useState<number | undefined>(item?.price);
   const [error, setError] = useState<string | null>(null);
   const [emptyFields, setEmptyFields] = useState<string[]>([]);
+
+  useEffect(() => {
+    const focusField = () => {
+      switch (fieldName) {
+        case "name":
+          nameRef.current?.focus();
+          nameRef.current?.select();
+          break;
+        case "description":
+          descriptionRef.current?.focus();
+          descriptionRef.current?.select();
+          break;
+        case "quantity":
+          quantityRef.current?.focus();
+          quantityRef.current?.select();
+          break;
+        case "labels":
+          labelsRef.current?.focus();
+          labelsRef.current?.select();
+          break;
+        case "brand":
+          brandRef.current?.focus();
+          brandRef.current?.select();
+          break;
+        case "size":
+          sizeRef.current?.focus();
+          sizeRef.current?.select();
+          break;
+        case "color":
+          colorRef.current?.focus();
+          colorRef.current?.select();
+          break;
+        case "price":
+          priceRef.current?.focus();
+          priceRef.current?.select();
+          break;
+        default:
+          break;
+      }
+    };
+
+    if (fieldName) {
+      focusField();
+    }
+  }, [fieldName]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -77,6 +132,7 @@ const ItemForm: React.FC<ItemFormProps> = ({
         <label className={styles.label}>Name:</label>
         <input
           type="text"
+          ref={nameRef}
           value={name}
           onChange={(e) => setName(e.target.value)}
           className={`${styles.input} ${
@@ -93,6 +149,7 @@ const ItemForm: React.FC<ItemFormProps> = ({
         <label className={styles.label}>Quantity:</label>
         <input
           type="number"
+          ref={quantityRef}
           value={quantity}
           onChange={(e) => {
             const value = Number(e.target.value);
@@ -104,7 +161,6 @@ const ItemForm: React.FC<ItemFormProps> = ({
           className={`${styles.input} ${
             emptyFields.includes("quantity") ? styles.errorInput : ""
           }`}
-          // min="1"
         />
       </div>
 
@@ -117,6 +173,7 @@ const ItemForm: React.FC<ItemFormProps> = ({
       <div className={styles.formGroup}>
         <label className={styles.label}>Description:</label>
         <textarea
+          ref={descriptionRef}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           className={`${styles.textarea} ${
@@ -129,6 +186,7 @@ const ItemForm: React.FC<ItemFormProps> = ({
         <label className={styles.label}>Brand:</label>
         <input
           type="text"
+          ref={brandRef}
           value={brand}
           onChange={(e) => setBrand(e.target.value)}
           className={styles.input}
@@ -139,6 +197,7 @@ const ItemForm: React.FC<ItemFormProps> = ({
         <label className={styles.label}>Size:</label>
         <input
           type="text"
+          ref={sizeRef}
           value={size}
           onChange={(e) => setSize(e.target.value)}
           className={styles.input}
@@ -149,6 +208,7 @@ const ItemForm: React.FC<ItemFormProps> = ({
         <label className={styles.label}>Color:</label>
         <input
           type="text"
+          ref={colorRef}
           value={color}
           onChange={(e) => setColor(e.target.value)}
           className={styles.input}
@@ -159,6 +219,7 @@ const ItemForm: React.FC<ItemFormProps> = ({
         <label className={styles.label}>Price:</label>
         <input
           type="number"
+          ref={priceRef}
           value={price}
           onChange={(e) => setPrice(Number(e.target.value))}
           className={styles.input}

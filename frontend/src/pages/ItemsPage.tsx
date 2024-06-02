@@ -7,7 +7,7 @@ import { useItemsActions } from "../hooks/useItemsActions";
 import { filterItems } from "../utils/filterItems";
 import styles from "../styles/ItemsPage.module.css";
 import ActionBar from "../components/ActionBar";
-import ItemTable from "../components/ItemTable"; // Import the new ItemTable component
+import ItemTable from "../components/ItemTable";
 
 const ItemsPage: React.FC = () => {
   const { state } = useItems();
@@ -18,6 +18,7 @@ const ItemsPage: React.FC = () => {
   const [filteredItems, setFilteredItems] = useState<Item[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentItem, setCurrentItem] = useState<Item | null>(null);
+  const [currentField, setCurrentField] = useState<string | null>(null);
   const [filter, setFilter] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
 
@@ -29,14 +30,16 @@ const ItemsPage: React.FC = () => {
     setFilteredItems(filterItems(items, filter, searchQuery));
   }, [filter, searchQuery, items]);
 
-  const handleEdit = (item: Item) => {
+  const handleEdit = (item: Item, fieldName?: string) => {
     setCurrentItem(item);
+    setCurrentField(fieldName || null);
     setIsModalOpen(true);
   };
 
   const handleModalClose = () => {
     setIsModalOpen(false);
     setCurrentItem(null);
+    setCurrentField(null);
   };
 
   const handleFilter = (label: string) => {
@@ -80,7 +83,8 @@ const ItemsPage: React.FC = () => {
           onDeleteItem={(itemId: string) =>
             handleDeleteItem(itemId, handleModalClose)
           }
-          item={currentItem} // Pass the current item to the modal for editing
+          item={currentItem}
+          fieldName={currentField} // Pass current field name to modal
         />
       </div>
     </div>

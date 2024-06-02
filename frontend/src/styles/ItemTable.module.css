@@ -54,14 +54,43 @@
   background-color: inherit; /* Inherit background color */
 }
 
-.tableBody .row:nth-child(even) .cell {
-  background-color: #f8f9fa; /* Slight background color for even rows */
+.tableBody .row .cell:nth-child(1) {
+  background-color: var(--body-name-bg); /* Lighter color for Name cells */
 }
 
-.tableBody .row:nth-child(odd) .cell {
-  background-color: #ffffff; /* White background color for odd rows */
+.tableBody .row .cell:nth-child(2) {
+  background-color: var(
+    --body-description-bg
+  ); /* Lighter color for Description cells */
 }
 
+.tableBody .row .cell:nth-child(3) {
+  background-color: var(
+    --body-quantity-bg
+  ); /* Lighter color for Quantity cells */
+}
+
+.tableBody .row .cell:nth-child(4) {
+  background-color: var(--body-labels-bg); /* Lighter color for Labels cells */
+}
+
+.tableBody .row .cell:nth-child(5) {
+  background-color: var(--body-brand-bg); /* Lighter color for Brand cells */
+}
+
+.tableBody .row .cell:nth-child(6) {
+  background-color: var(--body-size-bg); /* Lighter color for Size cells */
+}
+
+.tableBody .row .cell:nth-child(7) {
+  background-color: var(--body-color-bg); /* Lighter color for Color cells */
+}
+
+.tableBody .row .cell:nth-child(8) {
+  background-color: var(--body-price-bg); /* Lighter color for Price cells */
+}
+
+/* Header styles */
 .tableHeader .cell:nth-child(1) {
   background-color: var(--header-name-bg);
 }
@@ -92,46 +121,6 @@
 
 .tableHeader .cell:nth-child(8) {
   background-color: var(--header-price-bg);
-}
-
-.tableBody .row:nth-child(odd) .cell:nth-child(1),
-.tableBody .row:nth-child(even) .cell:nth-child(1) {
-  background-color: var(--body-name-bg); /* Lighter color for Name cells */
-}
-
-.tableBody .row:nth-child(odd) .cell:nth-child(2),
-.tableBody .row:nth-child(even) .cell:nth-child(2) {
-  background-color: var(--body-description-bg); /* Lighter color for Description cells */
-}
-
-.tableBody .row:nth-child(odd) .cell:nth-child(3),
-.tableBody .row:nth-child(even) .cell:nth-child(3) {
-  background-color: var(--body-quantity-bg); /* Lighter color for Quantity cells */
-}
-
-.tableBody .row:nth-child(odd) .cell:nth-child(4),
-.tableBody .row:nth-child(even) .cell:nth-child(4) {
-  background-color: var(--body-labels-bg); /* Lighter color for Labels cells */
-}
-
-.tableBody .row:nth-child(odd) .cell:nth-child(5),
-.tableBody .row:nth-child(even) .cell:nth-child(5) {
-  background-color: var(--body-brand-bg); /* Lighter color for Brand cells */
-}
-
-.tableBody .row:nth-child(odd) .cell:nth-child(6),
-.tableBody .row:nth-child(even) .cell:nth-child(6) {
-  background-color: var(--body-size-bg); /* Lighter color for Size cells */
-}
-
-.tableBody .row:nth-child(odd) .cell:nth-child(7),
-.tableBody .row:nth-child(even) .cell:nth-child(7) {
-  background-color: var(--body-color-bg); /* Lighter color for Color cells */
-}
-
-.tableBody .row:nth-child(odd) .cell:nth-child(8),
-.tableBody .row:nth-child(even) .cell:nth-child(8) {
-  background-color: var(--body-price-bg); /* Lighter color for Price cells */
 }
 
 /* Hover styles */

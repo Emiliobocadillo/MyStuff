@@ -1,3 +1,4 @@
+/* src/styles/ItemRow.module.css */
 .row {
   display: flex;
   align-items: stretch; /* Ensure rows stretch to full height */
@@ -10,7 +11,6 @@
 
 .row:hover {
   font-weight: 900;
-  text-decoration: underline;
   border: 1px black solid;
 }
 
@@ -28,4 +28,8 @@
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
+}
+
+.clickableText:hover {
+  text-decoration: underline;
 }

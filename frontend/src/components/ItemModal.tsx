@@ -2,11 +2,11 @@ import React from "react";
 import Modal from "react-modal";
 import ItemForm from "./ItemForm/ItemForm";
 import { Item, NewItem } from "../types/item";
-import styles from "../styles/ItemModal.module.css"; // Import the CSS module
+import styles from "../styles/ItemModal.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faTrash } from "@fortawesome/free-solid-svg-icons";
 
-Modal.setAppElement("#root"); // Bind modal to your appElement
+Modal.setAppElement("#root");
 
 interface ItemModalProps {
   isOpen: boolean;
@@ -14,7 +14,8 @@ interface ItemModalProps {
   onAddItem: (item: NewItem) => void;
   onUpdateItem: (item: Item) => void;
   onDeleteItem: (itemId: string) => void;
-  item?: Item | null; // Make item optional
+  item?: Item | null;
+  fieldName?: string | null;
 }
 
 const ItemModal: React.FC<ItemModalProps> = ({
@@ -24,13 +25,14 @@ const ItemModal: React.FC<ItemModalProps> = ({
   onUpdateItem,
   onDeleteItem,
   item,
+  fieldName,
 }) => {
   return (
     <Modal
       isOpen={isOpen}
       onRequestClose={onRequestClose}
-      className={styles.modalContent} // Apply modal content styles
-      overlayClassName={styles.customOverlay} // Apply overlay styles
+      className={styles.modalContent}
+      overlayClassName={styles.customOverlay}
       contentLabel={item ? "Edit Item" : "Add New Item"}
     >
       <div>
@@ -39,20 +41,21 @@ const ItemModal: React.FC<ItemModalProps> = ({
           onItemAdded={onAddItem}
           onItemUpdated={onUpdateItem}
           item={item}
+          fieldName={fieldName} // Pass field name to ItemForm
         />
         <div className={styles.buttonGroup}>
           <button onClick={onRequestClose} className={styles.closeButton}>
-    <FontAwesomeIcon icon={faTimes} style={{ marginRight: "8px" }} />
-    Close
-</button>
-{item && (
-    <button
-        onClick={() => onDeleteItem(item._id)}
-        className={styles.deleteButton}
-    >
-        <FontAwesomeIcon icon={faTrash} style={{ marginRight: "8px" }} />
-        Delete Item
-    </button>
+            <FontAwesomeIcon icon={faTimes} style={{ marginRight: "8px" }} />
+            Close
+          </button>
+          {item && (
+            <button
+              onClick={() => onDeleteItem(item._id)}
+              className={styles.deleteButton}
+            >
+              <FontAwesomeIcon icon={faTrash} style={{ marginRight: "8px" }} />
+              Delete Item
+            </button>
           )}
         </div>
       </div>

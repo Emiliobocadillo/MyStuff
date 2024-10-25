@@ -1,13 +1,13 @@
 version: '3'
+
 services:
   # Backend service
   backend:
     build: ./backend
     ports:
       - "5000:5000" # Exposing the backend on port 5000
-    environment:
-      - NODE_ENV=production
-      - MONGO_URL=mongodb://mongo:27017/mystuffdb # Connecting backend to MongoDB
+    env_file:
+      - .env.docker # Pointing to the new .env.docker file for Docker use
     depends_on:
       - mongo # Ensures MongoDB starts before the backend
 

@@ -56,7 +56,37 @@ JWT_SECRET=your_jwt_secret_key
 The application is containerized using **Docker**. Here's a breakdown of the containerization process and how each service is defined in the `docker-compose.yml` file:
 
 - **Backend**:
-  - The backend service is built from the Dockerfile located in the `backend` directory.
+  - The backend service is built from the Dockerfile located in the `backend` directory and it looks like this:
+
+```
+# Use a Node.js base image for frontend
+FROM node:18-alpine
+
+# Set the working directory inside the container
+WORKDIR /usr/src/app
+
+# Copy package.json and package-lock.json to install dependencies
+COPY package*.json ./
+
+# Install the dependencies
+RUN npm install
+
+# Copy the rest of your frontend code to the container
+COPY . .
+
+# Build the frontend for production
+RUN npm run build
+
+# Install a lightweight web server to serve static files (you can use nginx)
+RUN npm install -g serve
+
+# Expose port 3000 (or your frontend port)
+EXPOSE 3000
+
+# Serve the build folder
+CMD ["serve", "-s", "dist"]
+
+```
   - It runs the Node.js Express server, and exposes it on port `5000`.
   - Environment variables specific to the backend are stored in the `.env.docker` file, which is automatically loaded by Docker Compose.
   - The backend depends on MongoDB, meaning MongoDB must start before the backend can run.

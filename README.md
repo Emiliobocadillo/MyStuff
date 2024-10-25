@@ -43,6 +43,7 @@ NODE_ENV=production
 PORT=5000
 JWT_SECRET=your_jwt_secret_key
 
+```
 
 ### Containerization Process
 
@@ -100,6 +101,3 @@ services:
 # Defining a persistent volume for MongoDB
 volumes:
     mongo-data:
-
-
-

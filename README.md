@@ -35,7 +35,7 @@ To stop the application, use the `docker-compose down` command. This will stop a
 
 ### Environment Variables
 
-The backend environment variables are stored in the `.env.docker` file and automatically used by Docker when building the backend service. This file includes variables such as:
+The backend environment variables are stored in the `.env.docker` file and automatically used by Docker when building the backend service. This file includes the following variables:
 
 ```env
 MONGO_URI=mongodb://mongo:27017/mystuffdb

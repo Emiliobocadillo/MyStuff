@@ -41,3 +41,39 @@ MONGO_URL=mongodb://mongo:27017/mystuffdb
 NODE_ENV=production
 PORT=5000
 JWT_SECRET=your_jwt_secret_key
+
+
+How to Run the Application
+Prerequisites
+Make sure you have Docker Desktop installed. If not, download and install it from Docker Desktop.
+Steps to Run the App
+Clone the repository and navigate to the project directory.
+
+Create the .env file in the backend folder with the following content:
+
+makefile
+Kopier kode
+MONGO_URI=mongodb://mongo:27017/mystuffdb
+NODE_ENV=production
+PORT=5000
+JWT_SECRET=your_jwt_secret_key
+Open Docker Desktop and ensure it is running.
+
+In the project directory, run the following command:
+
+bash
+Kopier kode
+docker-compose up
+This will build and start the containers (frontend, backend, and MongoDB).
+
+Once started:
+
+Frontend: http://localhost:3000
+Backend API: http://localhost:5000
+MongoDB: MongoDB will be accessible internally at localhost:27017.
+Stopping the Application: Run the following command to stop the application and remove the containers:
+
+bash
+Kopier kode
+docker-compose down
+Your data will still be available when restarting due to Docker volumes.

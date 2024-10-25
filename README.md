@@ -42,6 +42,3 @@ MONGO_URI=mongodb://mongo:27017/mystuffdb
 NODE_ENV=production
 PORT=5000
 JWT_SECRET=your_jwt_secret_key
-
-
-To stop the application, use the docker-compose down command. This will stop and remove the running containers, but the data in MongoDB will persist since a Docker volume is being used.

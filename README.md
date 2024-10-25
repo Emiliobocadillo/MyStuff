@@ -42,3 +42,64 @@ MONGO_URI=mongodb://mongo:27017/mystuffdb
 NODE_ENV=production
 PORT=5000
 JWT_SECRET=your_jwt_secret_key
+
+
+### Containerization Process
+
+The application is containerized using **Docker**. Here's a breakdown of the containerization process and how each service is defined in the `docker-compose.yml` file:
+
+- **Backend**:
+  - The backend service is built from the Dockerfile located in the `backend` directory.
+  - It runs the Node.js Express server, and exposes it on port `5000`.
+  - Environment variables specific to the backend are stored in the `.env.docker` file, which is automatically loaded by Docker Compose.
+  - The backend depends on MongoDB, meaning MongoDB must start before the backend can run.
+
+- **Frontend**:
+  - The frontend service is built from the Dockerfile in the `frontend` directory.
+  - The frontend is a React application and is served on port `3000`.
+  - The frontend depends on the backend, ensuring the backend starts before the frontend.
+
+- **MongoDB**:
+  - MongoDB runs as a service using the official MongoDB image (`mongo:5.0`).
+  - It is exposed on port `27017` and uses a Docker volume (`mongo-data`) to persist data between container restarts, meaning that even if the MongoDB container is stopped, the data will not be lost.
+
+### Docker Compose Configuration (`docker-compose.yml`)
+
+The `docker-compose.yml` file orchestrates the setup and startup of all the services. Here's the configuration used:
+
+```yaml
+version: "3"
+
+services:
+    # Backend service
+    backend:
+        build: ./backend
+        ports:
+            - "5000:5000" # Exposing the backend on port 5000
+        env_file:
+            - ./backend/.env.docker # Pointing to the new .env.docker file for Docker use
+        depends_on:
+            - mongo # Ensures MongoDB starts before the backend
+
+    # Frontend service
+    frontend:
+        build: ./frontend
+        ports:
+            - "3000:3000" # Exposing the frontend on port 3000
+        depends_on:
+            - backend # Ensures the backend starts before the frontend
+
+    # MongoDB service
+    mongo:
+        image: mongo:5.0
+        ports:
+            - "27017:27017" # Exposing MongoDB on its default port
+        volumes:
+            - mongo-data:/data/db # Persisting MongoDB data
+
+# Defining a persistent volume for MongoDB
+volumes:
+    mongo-data:
+
+
+

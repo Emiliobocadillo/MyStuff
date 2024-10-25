@@ -1,8 +1,10 @@
 # MyStuff - Containerized MERN Stack Application
 
+
 ### Overview
 
 This project is a fully containerized MERN (MongoDB, Express, React, Node.js) application. It allows users to sign up, log in, and manage their items. Docker and Docker Compose have been used to containerize the application, ensuring easy setup and portability.
+
 
 ### Prerequisites
 
@@ -10,6 +12,7 @@ Make sure you have the following installed:
 
 - Docker
 - Docker Compose
+
 
 ### How to Run the Application
 
@@ -25,6 +28,7 @@ To run the application:
 
 To stop the application, use the `docker-compose down` command. This will stop and remove the running containers, but the data in MongoDB will persist since a Docker volume is being used.
 
+
 ### Project Structure
 
 The project consists of two main parts: the backend and frontend. The backend is a Node.js Express server, and the frontend is built with React. Both parts are containerized, and the MongoDB database also runs in a separate container. The project structure is as follows:
@@ -32,6 +36,7 @@ The project consists of two main parts: the backend and frontend. The backend is
 - **backend**: Contains all server-side code and the Dockerfile for creating the backend container.
 - **frontend**: Contains all client-side code and the Dockerfile for creating the frontend container.
 - **docker-compose.yml**: Orchestrates the containers for the backend, frontend, and MongoDB.
+
 
 ### Environment Variables
 
@@ -44,6 +49,7 @@ PORT=5000
 JWT_SECRET=your_jwt_secret_key
 
 ```
+
 
 ### Containerization Process
 
@@ -63,6 +69,7 @@ The application is containerized using **Docker**. Here's a breakdown of the con
 - **MongoDB**:
   - MongoDB runs as a service using the official MongoDB image (`mongo:5.0`).
   - It is exposed on port `27017` and uses a Docker volume (`mongo-data`) to persist data between container restarts, meaning that even if the MongoDB container is stopped, the data will not be lost.
+
 
 ### Docker Compose Configuration (`docker-compose.yml`)
 

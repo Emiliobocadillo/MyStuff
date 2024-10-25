@@ -30,3 +30,11 @@ To run the application:
    NODE_ENV=production
    PORT=5000
    JWT_SECRET=your_jwt_secret_key
+
+3. Ensure Docker Desktop is running.
+4. Run the command docker-compose up to build and start the containers. 
+5. The frontend will be available at http://localhost:3000.
+6. The backend API will run at http://localhost:5000.
+7. MongoDB will be accessible internally at localhost:27017.
+
+To stop the application, use the docker-compose down command. This will stop and remove the running containers, but the data in MongoDB will persist since a Docker volume is being used.

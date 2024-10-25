@@ -11,14 +11,6 @@ Make sure you have the following installed:
 - Docker
 - Docker Compose
 
-### Project Structure
-
-The project consists of two main parts: the backend and frontend. The backend is a Node.js Express server, and the frontend is built with React. Both parts are containerized, and the MongoDB database also runs in a separate container. The project structure is as follows:
-
-- **backend**: Contains all server-side code and the Dockerfile for creating the backend container.
-- **frontend**: Contains all client-side code and the Dockerfile for creating the frontend container.
-- **docker-compose.yml**: Orchestrates the containers for the backend, frontend, and MongoDB.
-
 ### How to Run the Application
 
 To run the application:
@@ -32,6 +24,14 @@ To run the application:
 6. MongoDB will be accessible internally at `localhost:27017`.
 
 To stop the application, use the `docker-compose down` command. This will stop and remove the running containers, but the data in MongoDB will persist since a Docker volume is being used.
+
+### Project Structure
+
+The project consists of two main parts: the backend and frontend. The backend is a Node.js Express server, and the frontend is built with React. Both parts are containerized, and the MongoDB database also runs in a separate container. The project structure is as follows:
+
+- **backend**: Contains all server-side code and the Dockerfile for creating the backend container.
+- **frontend**: Contains all client-side code and the Dockerfile for creating the frontend container.
+- **docker-compose.yml**: Orchestrates the containers for the backend, frontend, and MongoDB.
 
 ### Environment Variables
 

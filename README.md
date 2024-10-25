@@ -24,17 +24,24 @@ The project consists of two main parts: the backend and frontend. The backend is
 To run the application:
 
 1. Clone the repository and navigate to the project directory.
-2. Create a `.env` file inside the `backend` directory with the following content:
-   ```env
-   MONGO_URI=mongodb://mongo:27017/mystuffdb
-   NODE_ENV=production
-   PORT=5000
-   JWT_SECRET=your_jwt_secret_key
+2. Ensure Docker Desktop is running.
+3. Run the command `docker-compose up` to build and start the containers.
+   - This will start the backend, frontend, and MongoDB.
+4. The frontend will be available at [http://localhost:3000](http://localhost:3000).
+5. The backend API will run at [http://localhost:5000](http://localhost:5000).
+6. MongoDB will be accessible internally at `localhost:27017`.
 
-3. Ensure Docker Desktop is running.
-4. Run the command docker-compose up to build and start the containers. 
-5. The frontend will be available at http://localhost:3000.
-6. The backend API will run at http://localhost:5000.
-7. MongoDB will be accessible internally at localhost:27017.
+To stop the application, use the `docker-compose down` command. This will stop and remove the running containers, but the data in MongoDB will persist since a Docker volume is being used.
+
+### Environment Variables
+
+The backend environment variables are stored in the `.env.docker` file and automatically used by Docker when building the backend service. This file includes variables such as:
+
+```env
+MONGO_URI=mongodb://mongo:27017/mystuffdb
+NODE_ENV=production
+PORT=5000
+JWT_SECRET=your_jwt_secret_key
+
 
 To stop the application, use the docker-compose down command. This will stop and remove the running containers, but the data in MongoDB will persist since a Docker volume is being used.
